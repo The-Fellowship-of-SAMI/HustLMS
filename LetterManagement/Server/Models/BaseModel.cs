@@ -1,4 +1,4 @@
-﻿namespace LetterManagementBackendNoDocker.Models
+﻿namespace LetterManagement.Server.Models
 {
     public class BaseModel
     {

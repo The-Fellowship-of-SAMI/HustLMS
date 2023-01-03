@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace LetterManagementBackendNoDocker.Models
+namespace LetterManagement.Server.Models
 {
     public class LetterTemplate : BaseModel
     {
