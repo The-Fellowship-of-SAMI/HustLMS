@@ -1,4 +1,5 @@
-﻿namespace LetterManagement.Server.Models
+﻿// ReSharper disable CollectionNeverUpdated.Global
+namespace LetterManagement.Server.Models
 {
     public class Letter : BaseModel
     {
