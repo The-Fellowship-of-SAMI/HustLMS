@@ -10,7 +10,7 @@ namespace LetterManagement.Server.Models
         public Department Department { get; set; }
         public string Receiver { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string Footer { get; set; }
         public List<TemplateAdditionalField> AdditionalFields { get; set; } = new List<TemplateAdditionalField>();

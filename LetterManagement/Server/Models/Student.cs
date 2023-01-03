@@ -6,7 +6,7 @@ namespace LetterManagement.Server.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public int StudentId { get; set;}
 
         [EmailAddress]
@@ -18,8 +18,8 @@ namespace LetterManagement.Server.Models
 
         public string SchoolYear { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
-        public DateTime LastLogin { get; set; }
+        public DateTime DateOfBirth { get; set; } = DateTime.Now;
+        public DateTime LastLogin { get; set; } = DateTime.Now;
 
     }
 }

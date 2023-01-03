@@ -19,11 +19,11 @@ namespace LetterManagement.Server.Repositories
 
         public string DbPath { get; }
 
-        public DataContext()
+        public DataContext(DbContextOptions options) : base(options)
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "sqlite_data.db");
+            DbPath = System.IO.Path.Join(path, "sqlite_data1.db");
         }
 
         // The following configures EF to create a Sqlite database file in the

@@ -7,7 +7,7 @@ namespace LetterManagement.Server.MapperProfiles;
 
 public class StudentProfile : Profile
 {
-    protected StudentProfile()
+    public StudentProfile()
     {
         CreateMap<Student, StudentDto>();
         CreateMap<StudentDto, Student>();

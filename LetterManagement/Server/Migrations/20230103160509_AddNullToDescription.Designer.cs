@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetterManagement.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230103065131_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230103160509_AddNullToDescription")]
+    partial class AddNullToDescription
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,7 +98,6 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Footer")
@@ -136,7 +135,6 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -171,7 +169,6 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
