@@ -1,19 +1,30 @@
-﻿namespace LetterManagementBackendNoDocker.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace LetterManagementBackendNoDocker.Models
 {
-    public class LetterTemplate
+    public class LetterTemplate : BaseModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<FieldAndValue> FieldAndValues { get; set; }
+        public Department Department { get; set; }
+        public string Receiver { get; set; }
+
+        public string Description { get; set; }
+
+        public string Footer { get; set; }
+        public List<TemplateAdditionalField> AdditionalFields { get; set; } = new List<TemplateAdditionalField>();
     }
 
-    public class FieldAndValue
+    public class TemplateAdditionalField
     {
-        public int Order { get; set; }
+        public Guid Id { get; set; }
 
-        public bool IsActive { get; set; }
-        public string Field { get; set; }
-        public string Value { get; set; }
+        public TemplateAdditionalField? GroupAdditionalField { get; set; } = null;
+
+        public string? FieldName { get; set; } = null;
+
+        public string? FieldType { get; set; } = null;
+
     }
 }

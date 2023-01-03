@@ -1,23 +1,31 @@
 ﻿namespace LetterManagementBackendNoDocker.Models
 {
-    public class Letter
+    public class Letter : BaseModel
     {
         public Guid Id { get; set; }
 
-        public Guid Template { get; set; }
+        public LetterTemplate? Template { get; set; }
 
-        public int StudentId { get; set; }
+        public Student? Student { get; set; }
 
-        public int ReceiverId { get; set; }
+        public Manager? Manager { get; set; }
 
-        public int ResolverId { get; set; }
+        public string? NoteToStudent { get; set; }
+        public DateTime? ReceivedDate { get; set; } = null;
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? FinishedDate { get; set; } = null;
 
-        public DateTime UpdatedDate { get; set;}
+        public string State {
+            get {
+                if(ReceivedDate is not null)
+                    return "Received";
 
-        public string State { get; set; }
+                if (FinishedDate is not null)
+                    return "Finished";
+                else return "Sent";
+                } 
+        }
 
-
+        public List<LetterAdditionalField> LetterAdditionalFields { get; set; } = new List<LetterAdditionalField>();
     }
 }

@@ -33,7 +33,6 @@
     type Forecasts = {
         date: string
     }[];
-
     interface Data {
         loading: boolean,
         post: null | Forecasts
