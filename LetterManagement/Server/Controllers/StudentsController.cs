@@ -15,9 +15,11 @@ namespace LetterManagement.Server.Controllers
         {
             _studentService = studentService;
         }
-        public async Task<ActionResult<IEnumerable<StudentDto>>> Get()
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<StudentDto>>> GetAll()
         {
-            return  Ok(await this._studentService.get());
+            return  Ok(await this._studentService.getAll());
         }
     }
 }

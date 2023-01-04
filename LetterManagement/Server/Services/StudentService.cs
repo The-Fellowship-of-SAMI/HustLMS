@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Reflection.Metadata.Ecma335;
+using AutoMapper;
 using LetterManagement.Server.Dtos;
 using LetterManagement.Server.Models;
 using LetterManagement.Server.Repositories;
@@ -17,7 +18,7 @@ public class StudentService : IStudentService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<StudentDto>> get()
+    public async Task<IEnumerable<StudentDto>> getAll()
     {
         var students = await _context.Students.ToListAsync();
         return _mapper.Map<IEnumerable<StudentDto>>(students);
@@ -32,11 +33,17 @@ public class StudentService : IStudentService
         return t;
     }
 
-    public Task<StudentDto> update(StudentDto tOld, StudentDto tNew)
+    public async Task<StudentDto> update(Guid id, StudentDto studentDto)
     {
-        var studentOld = _mapper.Map<Student>(tOld);
-        var studentNew = _mapper.Map<Student>(tNew);
-        throw new NotImplementedException();
+        var inDatabaseStudent = await _context.Students.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (inDatabaseStudent == null) return null;
+
+        var student = _mapper.Map<StudentDto,Student>(studentDto, inDatabaseStudent);
+        var result = await this._context.SaveChangesAsync() > 0;
+
+        if (!result) throw new BadHttpRequestException("Unable to save to database");
+        return studentDto;
     }
 
     public Task<StudentDto> delete(StudentDto t)

@@ -17,6 +17,7 @@ namespace LetterManagement.Server.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ILetterTemplateService, LetterTemplateService>();
             return services;
         }
     }
