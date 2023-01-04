@@ -15,7 +15,6 @@ StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configurat
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<DataContext>();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
@@ -40,7 +39,7 @@ if (app.Environment.IsDevelopment())
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occured during migration");
+        logger.LogError(ex, "An error occurred during migration");
     }
 
 }
