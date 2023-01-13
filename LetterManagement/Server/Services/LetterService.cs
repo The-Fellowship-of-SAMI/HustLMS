@@ -35,26 +35,32 @@ public class LetterService : ILetterService
 
     public async Task<Letter> delete(Letter t)
     {
-        throw new NotImplementedException();
+        this._context.Letters.Remove(t);
+        await this._context.SaveChangesAsync();
+        return t;
     }
 
     public async Task<string> GetState(Letter letter)
     {
-        throw new NotImplementedException();
+        var let = await this._context.Letters.Include(x => x.State).SingleOrDefaultAsync(x => x.Id == letter.Id);
+        return let.State;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLetterByStudentId(int studentId)
     {
-        throw new NotImplementedException();
+        var lettters = await this._context.Letters.Where(x => x.Student.StudentId == studentId).ToListAsync();
+        return lettters;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLetterByManagerId(Guid managerId)
     {
-        throw new NotImplementedException();
+        var lettters = await this._context.Letters.Where(x => x.Manager.Id == managerId).ToListAsync();
+        return lettters;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLetterByDepartmentId(Guid departmentId)
     {
-        throw new NotImplementedException();
+        var lettters = await this._context.Letters.Where(x => x.Template.Department.Id == departmentId).ToListAsync();
+        return lettters;    
     }
 }
