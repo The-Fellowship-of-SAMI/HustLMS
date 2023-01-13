@@ -15,7 +15,12 @@ public class LetterService : ILetterService
 
     public async Task<IEnumerable<Letter>> getAll()
     {
-        return await this._context.Letters.Include(x => x.LetterAdditionalFields).ToListAsync();
+        return await this._context.Letters.
+            Include(x => x.LetterAdditionalFields).
+            Include(x=>x.Student).
+            Include(x=>x.Manager).
+            Include(x=>x.Template).
+            ToListAsync();
     }
 
     public async Task<Letter> create(Letter letter)
@@ -48,7 +53,13 @@ public class LetterService : ILetterService
 
     public async Task<IEnumerable<Letter>> GetAllLetterByStudentId(int studentId)
     {
-        var lettters = await this._context.Letters.Where(x => x.Student.StudentId == studentId).ToListAsync();
+        var lettters = await this._context.Letters.
+            Where(x => x.Student.StudentId == studentId).
+            Include(x => x.LetterAdditionalFields).
+            Include(x=>x.Student).
+            Include(x=>x.Manager).
+            Include(x=>x.Template).
+            .ToListAsync();
         return lettters;
     }
 

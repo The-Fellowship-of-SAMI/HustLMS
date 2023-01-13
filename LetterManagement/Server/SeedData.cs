@@ -22,6 +22,29 @@ namespace LetterManagement.Server
                         Name = "Viện toán ứng dụng và tin học"
                     }
                 };
+                var managers = new List<Manager>()
+                {
+                    new()
+                    {
+                        Id = default,
+                        Name = "Trần Thị A",
+                        Description = "Phụ trách về vấn đề bảng điểm",
+                        DateOfBirth = new DateTime(1976, 2, 3),
+                        Email = "a.tranthi@hust.edu.vn",
+                        PhoneNumber = "012345678",
+                        Department = departments[1] // Sami
+                    },
+                    new()
+                    {
+                        Id = default,
+                        Name = "Nguyễn Thị C",
+                        Description = "Phụ trách về vấn chuyển sinh kĩ sư - thạc sĩ, cử nhân - thạc sĩ.",
+                        DateOfBirth = new DateTime(1980, 8, 3),
+                        Email = "c.nguyenthi@hust.edu.vn",
+                        PhoneNumber = "00101010101",
+                        Department = departments[0] // PDT
+                    }
+                };
                 var students = new List<Student>
                 {
                     new()
@@ -89,10 +112,42 @@ namespace LetterManagement.Server
                     }
                 };
 
+                var letters = new List<Letter>()
+                {
+                    new()
+                    {
+                        CreatedAt = default,
+                        ModifiedAt = default,
+                        Id = default,
+                        Template = letterTemplates[0],
+                        Student = students.SingleOrDefault((x=>x.StudentId==20195902)),
+                        Manager = null,
+                        NoteToStudent = null,
+                        ReceivedDate = null,
+                        FinishedDate = null,
+                        LetterAdditionalFields = null
+                    },
+                    new()
+                    {
+                        CreatedAt = default,
+                        ModifiedAt = default,
+                        Id = default,
+                        Template = letterTemplates[0],
+                        Student = students.SingleOrDefault(x=>x.StudentId==20195859),
+                        Manager = managers[1],
+                        NoteToStudent = null,
+                        ReceivedDate = null,
+                        FinishedDate = null,
+                        LetterAdditionalFields = null
+                    }
+                };
+
 
                 await context.Students.AddRangeAsync(students);
                 await context.Departments.AddRangeAsync(departments);
+                await context.Manager.AddRangeAsync(managers);
                 await context.LetterTemplates.AddRangeAsync(letterTemplates);
+                await context.Letters.AddRangeAsync(letters);
                 await context.SaveChangesAsync();
             }
         }
