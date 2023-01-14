@@ -18,8 +18,11 @@ public class LetterService : ILetterService
         return await this._context.Letters.
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Student).
-            Include(x=>x.Manager).
             Include(x=>x.Template).
+            ThenInclude(x=>x.AdditionalFields).
+            AsSplitQuery().
+            Include(x=>x.Manager).
+            ThenInclude(x=>x.Department).
             ToListAsync();
     }
 
@@ -53,25 +56,35 @@ public class LetterService : ILetterService
 
     public async Task<IEnumerable<Letter>> GetAllLetterByStudentId(int studentId)
     {
-        var lettters = await this._context.Letters.
+        var letters = await this._context.Letters.
             Where(x => x.Student.StudentId == studentId).
             Include(x => x.LetterAdditionalFields).
-            Include(x=>x.Student).
             Include(x=>x.Manager).
             Include(x=>x.Template).
-            .ToListAsync();
-        return lettters;
+            ToListAsync();
+        return letters;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLetterByManagerId(Guid managerId)
     {
-        var lettters = await this._context.Letters.Where(x => x.Manager.Id == managerId).ToListAsync();
-        return lettters;
+        var letters = await this._context.Letters.
+            Where(x => x.Manager.Id == managerId).
+            Include(x => x.LetterAdditionalFields).
+            Include(x=>x.Student).
+            Include(x=>x.Template).
+            ToListAsync();
+        return letters;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLetterByDepartmentId(Guid departmentId)
     {
-        var lettters = await this._context.Letters.Where(x => x.Template.Department.Id == departmentId).ToListAsync();
-        return lettters;    
+        var letters = await this._context.Letters.
+            Where(x => x.Template.Department.Id == departmentId).
+            Include(x => x.LetterAdditionalFields).
+            Include(x=>x.Student).
+            Include(x=>x.Manager).
+            Include(x=>x.Template).
+            ToListAsync();
+        return letters;    
     }
 }
