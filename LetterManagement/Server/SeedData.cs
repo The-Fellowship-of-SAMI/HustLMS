@@ -1,5 +1,5 @@
-﻿using LetterManagement.Server.Models;
-using LetterManagement.Server.Repositories;
+﻿using LetterManagement.Server.Repositories;
+using LetterManagement.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetterManagement.Server
@@ -129,15 +129,28 @@ namespace LetterManagement.Server
                     },
                     new()
                     {
-                        CreatedAt = default,
+                        CreatedAt = DateTime.Today.AddDays(-5),
                         ModifiedAt = default,
                         Id = default,
                         Template = letterTemplates[0],
                         Student = students.SingleOrDefault(x=>x.StudentId==20195859),
                         Manager = managers[1],
                         NoteToStudent = null,
-                        ReceivedDate = null,
+                        ReceivedDate = DateTime.Today.AddDays(1),
                         FinishedDate = null,
+                        LetterAdditionalFields = null
+                    },
+                    new()
+                    {
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now,
+                        Id = default,
+                        Template = letterTemplates[0],
+                        Student = students.SingleOrDefault(x=>x.StudentId==20195859),
+                        Manager = managers[1],
+                        NoteToStudent = null,
+                        ReceivedDate = DateTime.Today.AddDays(1),
+                        FinishedDate = DateTime.Today.AddDays(3),
                         LetterAdditionalFields = null
                     }
                 };

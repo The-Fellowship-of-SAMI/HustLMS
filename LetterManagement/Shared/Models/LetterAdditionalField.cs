@@ -1,4 +1,4 @@
-﻿namespace LetterManagement.Server.Models
+﻿namespace LetterManagement.Shared.Models
 {
     public class LetterAdditionalField : TemplateAdditionalField
     {

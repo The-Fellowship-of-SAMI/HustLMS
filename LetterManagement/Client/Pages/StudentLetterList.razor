@@ -1,0 +1,20 @@
+﻿@page "/StudentLetterList"
+@using LetterManagement.Shared.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@inject HttpClient Http
+
+<LetterList Letters="@Letters"></LetterList>
+
+@code {
+
+    public int StudentId = 20195859;
+    public List<Letter> Letters { get; set; } = null;
+    
+    protected override async void OnInitialized()
+    {
+        this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/student/{StudentId}");
+        StateHasChanged();
+    }
+}

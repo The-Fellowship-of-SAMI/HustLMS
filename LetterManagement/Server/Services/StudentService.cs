@@ -1,9 +1,9 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using AutoMapper;
-using LetterManagement.Server.Dtos;
-using LetterManagement.Server.Models;
 using LetterManagement.Server.Repositories;
+using LetterManagement.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using StudentDto = LetterManagement.Server.Dtos.StudentDto;
 
 namespace LetterManagement.Server.Services;
 

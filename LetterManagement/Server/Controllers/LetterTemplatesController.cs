@@ -1,5 +1,6 @@
-﻿using LetterManagement.Server.Models;
-using LetterManagement.Server.Services;
+﻿using LetterManagement.Server.Services;
+using LetterManagement.Shared.Models;
+
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

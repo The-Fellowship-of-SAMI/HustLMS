@@ -1,5 +1,4 @@
 ﻿using LetterManagement.Server.Dtos;
-using LetterManagement.Server.Models;
 
 namespace LetterManagement.Server.Services;
 

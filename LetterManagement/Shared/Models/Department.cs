@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace LetterManagement.Server.Models
+﻿namespace LetterManagement.Shared.Models
 {
     public class Department : BaseModel
     {

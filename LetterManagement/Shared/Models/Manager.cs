@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LetterManagement.Server.Models
+namespace LetterManagement.Shared.Models
 {
     public class Manager
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LetterManagement.Server.Dtos;
-using LetterManagement.Server.Models;
+using LetterManagement.Shared.Models;
+using StudentDto = LetterManagement.Server.Dtos.StudentDto;
 
 namespace LetterManagement.Server.MapperProfiles;
 

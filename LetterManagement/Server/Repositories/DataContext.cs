@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System.Reflection.Metadata;
-using LetterManagement.Server.Models;
+using LetterManagement.Shared.Models;
 
 namespace LetterManagement.Server.Repositories
 {

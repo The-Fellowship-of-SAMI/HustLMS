@@ -1,4 +1,4 @@
-﻿using LetterManagement.Server.Models;
+﻿using LetterManagement.Shared.Models;
 
 namespace LetterManagement.Server.Services
 {
