@@ -6,9 +6,12 @@ public interface ILetterService : ICrud<Letter>
 {
     public Task<string> GetState(Letter letter);
 
-    public Task<IEnumerable<Letter>> GetAllLetterByStudentId(int studentId);
 
-    public Task<IEnumerable<Letter>> GetAllLetterByManagerId(Guid managerId);
+    public Task<Letter> GetLetter(Guid letterId);
 
-    public Task<IEnumerable<Letter>> GetAllLetterByDepartmentId(Guid departmentId);
+    public Task<IEnumerable<Letter>> GetAllLettersByStudentId(int studentId);
+
+    public Task<IEnumerable<Letter>> GetAllLettersByManagerId(Guid managerId);
+
+    public Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(Guid departmentId);
 }

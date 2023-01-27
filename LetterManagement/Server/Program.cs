@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using LetterManagement.Server.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,5 +62,4 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
-
 app.Run();

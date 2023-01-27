@@ -54,18 +54,20 @@ public class LetterService : ILetterService
         return let.State;
     }
 
-    public async Task<IEnumerable<Letter>> GetAllLetterByStudentId(int studentId)
+    public async Task<IEnumerable<Letter>> GetAllLettersByStudentId(int studentId)
     {
         var letters = await this._context.Letters.
             Where(x => x.Student.StudentId == studentId).
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Manager).
             Include(x=>x.Template).
+            Include(x => x.Manager.Department).
+
             ToListAsync();
         return letters;
     }
 
-    public async Task<IEnumerable<Letter>> GetAllLetterByManagerId(Guid managerId)
+    public async Task<IEnumerable<Letter>> GetAllLettersByManagerId(Guid managerId)
     {
         var letters = await this._context.Letters.
             Where(x => x.Manager.Id == managerId).
@@ -76,7 +78,7 @@ public class LetterService : ILetterService
         return letters;
     }
 
-    public async Task<IEnumerable<Letter>> GetAllLetterByDepartmentId(Guid departmentId)
+    public async Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(Guid departmentId)
     {
         var letters = await this._context.Letters.
             Where(x => x.Template.Department.Id == departmentId).
@@ -86,5 +88,18 @@ public class LetterService : ILetterService
             Include(x=>x.Template).
             ToListAsync();
         return letters;    
+    }
+
+    public async Task<Letter> GetLetter(Guid letterId)
+    {
+        var letter = await this._context.Letters.
+            AsSplitQuery().
+            Include(x => x.LetterAdditionalFields).
+            Include(x => x.Student).
+            Include(x => x.Manager).
+            Include(x => x.Template).
+            SingleOrDefaultAsync(x => x.Id == letterId);
+        if (letter is not null) return letter;
+        return null;
     }
 }
