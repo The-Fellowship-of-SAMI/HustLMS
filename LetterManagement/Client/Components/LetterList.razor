@@ -1,0 +1,49 @@
+﻿@using LetterManagement.Shared.Models
+@using MudBlazor.Extensions
+
+@if (Letters is null)
+{
+    <MudProgressLinear  Color="Color.Info" Indeterminate="true" />
+}
+else
+{
+    <MudStack>
+    @foreach (var letter in Letters)
+    {
+            if (letter is not null)
+            {
+                <MudCard Style="width: 60%">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h5">@letter?.Template?.Name</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        @if(letter.Student is not null)
+                        {
+                          <MudText>Sinh viên:@letter.Student.Name. MSSV: @letter.Student.StudentId. Khóa: @letter.Student.SchoolYear</MudText>
+                        }
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudText>Đơn vị: @letter?.Template?.Department.Name</MudText>
+                            @if(letter.Manager is not null)
+                            {
+                                <MudText Align="Align.Right">Người phụ trách: @letter?.Manager?.Name</MudText>
+                            }
+                        </MudStack>
+                        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                        <MudText GutterBottom="true">Ngày gửi: @letter.CreatedAt.ToString("dd/MM/yyyy")</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">Xem chi tiết</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            }
+    }
+    </MudStack>
+
+}
+@code {
+
+    [Parameter]
+    public IEnumerable<Letter>? Letters { get; set; } = null;
+}
