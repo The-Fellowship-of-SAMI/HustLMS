@@ -17,7 +17,10 @@ namespace LetterManagement.Server.Services
 
         public async Task<IEnumerable<LetterTemplate>> getAll()
         {
-            return await this._context.LetterTemplates.Include(x=>x.AdditionalFields).ToListAsync();
+            return await this._context.LetterTemplates.
+                Include(x=>x.AdditionalFields).
+                Include(x=>x.Department).
+                ToListAsync();
         }
 
         public async Task<LetterTemplate> create(LetterTemplate letterTemplate)

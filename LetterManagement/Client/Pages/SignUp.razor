@@ -1,6 +1,6 @@
-﻿@page "/SignUp"
+﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
-
+@layout EmptyLayout
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
 <DataAnnotationsValidator/>
 <MudStack>
@@ -11,11 +11,11 @@
             <MudCardContent>
                 <MudTextField Label="Email" Class="mt-3"
                               @bind-Value="model.Email" For="@(() => model.Email)"/>
-                <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                <MudTextField Label="Mật khẩu" HelperText="Tài khoản Office365" Class="mt-3"
                               @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password"/>
             </MudCardContent>
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Đăng nhập</MudButton>
             </MudCardActions>
         </MudCard>
     </MudItem>
@@ -24,10 +24,10 @@
 
 
 @code {
-    RegisterAccountForm model = new RegisterAccountForm();
+    LoginForm model = new LoginForm();
     bool success;
 
-    public class RegisterAccountForm
+    public class LoginForm
     {
 
         [Required]

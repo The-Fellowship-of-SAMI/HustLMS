@@ -19,11 +19,11 @@ namespace LetterManagement.Shared.Models
         public string State {
             get {
                 if(ReceivedDate is not null)
-                    return "Received";
+                    return "Đã nhận";
 
                 if (FinishedDate is not null)
-                    return "Finished";
-                else return "Sent";
+                    return "Hoàn thành";
+                else return "Đã gửi";
                 } 
         }
 
