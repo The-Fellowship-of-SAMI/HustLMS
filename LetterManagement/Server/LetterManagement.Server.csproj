@@ -28,5 +28,9 @@
 	  <Folder Include="Public\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="hust_lms_sqlite.db" />
+	</ItemGroup>
+
 
 </Project>

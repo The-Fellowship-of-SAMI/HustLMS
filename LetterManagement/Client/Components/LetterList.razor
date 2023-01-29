@@ -32,6 +32,11 @@ else
                         </MudStack>
                         <MudDivider DividerType="DividerType.Middle" Class="my-6" />
                         <MudText GutterBottom="true">Ngày gửi: @letter.CreatedAt.ToString("dd/MM/yyyy")</MudText>
+                        <MudText GutterBottom="true">Trạng thái: @letter.State</MudText>
+                        @if (letter.FinishedDate is not null)
+                        {
+                            <MudText GutterBottom="true"> Hoàn thành: @letter.FinishedDate?.ToString("dd/MM/yyyy")</MudText>
+                        }
                     </MudCardContent>
                     <MudCardActions>
                         <MudButton Variant="Variant.Text" Color="Color.Primary">Xem chi tiết</MudButton>
