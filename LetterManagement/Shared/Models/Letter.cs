@@ -28,5 +28,17 @@ namespace LetterManagement.Shared.Models
         }
 
         public List<LetterAdditionalField> LetterAdditionalFields { get; set; } = new List<LetterAdditionalField>();
+
+        public List<Confirmation> Confirmations { get; set; } = new List<Confirmation>();
+    }
+
+    public class Confirmation : ConfirmationTemplate
+    {
+        public string? Note { get; set; }
+        public bool? IsOk { get; set; } = false;
+
+        public DateTime? ActionDate { get; set; } = DateTime.MinValue;
+
+        public Department? DepartmentNeedToConfirm { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace LetterManagement.Shared.Models
 
         public string PhoneNumber { get; set; }
 
-        public string School { get; set; }
+        public Department School { get; set; }
 
         public string SchoolYear { get; set; }
 

@@ -13,13 +13,15 @@ namespace LetterManagement.Server
                 var departments = new List<Department>
                 {
                     new()
-                    { Id = new Guid(),
+                    {   Id = new Guid(),
                         Name = "Phòng đào tạo",
+                        ShortName="PDT"
 
                     },
                     new()
-                    {Id = new Guid(),
-                        Name = "Viện toán ứng dụng và tin học"
+                    {   Id = new Guid(),
+                        Name = "Viện toán ứng dụng và tin học",
+                        ShortName="SAMI"
                     }
                 };
                 var managers = new List<Manager>()
@@ -54,7 +56,7 @@ namespace LetterManagement.Server
                         StudentId = 20195859,
                         Email = "duc.pa195859@sis.hust.edu.vn",
                         DateOfBirth = new DateTime(2001, 9, 7),
-                        School = "SAMI",
+                        School = departments.Single(x=>x.ShortName=="SAMI"),
                         SchoolYear = "K64",
 
                     },
@@ -65,7 +67,7 @@ namespace LetterManagement.Server
                         StudentId = 20191234,
                         Email = "minh.nh191234@sis.hust.edu.vn",
                         DateOfBirth = new DateTime(2001, 1, 1),
-                        School = "SAMI",
+                        School = departments.Single(x=>x.ShortName=="SAMI"),
                         SchoolYear = "K64",
 
                     },
@@ -76,14 +78,91 @@ namespace LetterManagement.Server
                         StudentId = 20190001,
                         Email = "hieu.nc190001@sis.hust.edu.vn",
                         DateOfBirth = new DateTime(2001, 5, 6),
-                        School = "SAMI",
+                        School = departments.Single(x=>x.ShortName=="SAMI"),
                         SchoolYear = "K64",
 
                     },
                 };
 
+                var LongTimeOffLetterGroupId = new Guid();
                 var letterTemplates = new List<LetterTemplate>
                 {
+                    new()
+                    {
+                        Id = new Guid(),
+                        Department = departments.Single(x=>x.ShortName == "PDT"),
+                        Name = "Đơn xin nghỉ học dài hạn",
+                        Receiver = @"BAN GIÁM HIỆU ĐẠI HỌC BÁCH KHOA HÀ NỘI, PHÒNG ĐÀO TẠO ĐẠI HỌC",
+                        Description = "Sinh viên sẽ nhận Quyết định nghỉ học dài hạn tại Phòng Công tác chính trị & Công tác SV. Thời gian nhập học trở lại là trong vòng 4 tuần trước khi bắt đầu mỗi học kỳ để SV đủ thời gian đăng ký học tập.",
+                        AdditionalFields = new List<TemplateAdditionalField>
+                        {
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName =
+                                    "Tôi nộp đơn xin nghỉ học dài hạn từ (ghi ngày tháng năm bắt đầu nghỉ):",
+                                FieldType = FieldTypes.Datetime
+
+                            },
+                            
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Lý do xin nghỉ học dài hạn (đánh dấu X vào một hoặc nhiều ô tương ứng và ghi chi tiết nếu cần):",
+                                FieldType = FieldTypes.Checkbox
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Xin đi du học tự túc ngắn hạn (ghi rõ du học ở đâu, kèm theo bản copy Giấy mời du học/Giấy báo nhập trường):",
+                                FieldType = FieldTypes.Text,
+                                GroupFieldId = LongTimeOffLetterGroupId
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Dành thời gian ôn thi lại đại học (sẽ thi lại trường nào):",
+                                FieldType = FieldTypes.Text,
+                                GroupFieldId = LongTimeOffLetterGroupId
+
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Do điều kiện kinh tế có khó khăn (nêu cụ thể):",
+                                FieldType = FieldTypes.Text,
+                                GroupFieldId = LongTimeOffLetterGroupId
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Do sức khỏe không tốt (kèm hồ sơ bệnh án):",
+                                FieldType = FieldTypes.Text,
+                                GroupFieldId = LongTimeOffLetterGroupId
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Lý do khác:",
+                                FieldType = FieldTypes.Text,
+                                GroupFieldId = LongTimeOffLetterGroupId
+                            },
+                        },
+                        Footer =
+                            @"Tôi đã được nhà trường tư vấn kỹ trước khi nộp đơn xin nghỉ học dài hạn. 
+                              Tôi hiểu rõ Qui chế đào tạo đại học hệ chính qui và tự chịu trách nhiệm 
+                              về việc đảm bảo thời gian nghỉ học cho phép cũng như tổng thời gian
+                              học tập tại trường theo quy định.",
+                        ConfirmationsTemplate = new List<ConfirmationTemplate>
+                        {
+                            new ConfirmationTemplate()
+                            {
+                                Id = new Guid(),
+                                Name="Ý kiến của Viện quản lý"
+                                
+                            }
+                        }
+                    },
                     new()
                     {
                         Id = new Guid(),

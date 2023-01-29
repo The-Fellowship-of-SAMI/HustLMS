@@ -12,17 +12,39 @@
 
         public string Footer { get; set; }
         public List<TemplateAdditionalField> AdditionalFields { get; set; } = new List<TemplateAdditionalField>();
+
+        public string? Image { get; set; } = null;
+
+        public List<ConfirmationTemplate> ConfirmationsTemplate { get; set; } = new List<ConfirmationTemplate> ();
     }
 
     public class TemplateAdditionalField
     {
         public Guid Id { get; set; }
 
-        public TemplateAdditionalField? GroupAdditionalField { get; set; } = null;
+        public Guid? GroupFieldId { get; set; }
 
         public string? FieldName { get; set; } = null;
 
-        public string? FieldType { get; set; } = null;
+        public FieldTypes? FieldType { get; set; } = null;
+
+        public string? AdditionalText { get; set; } = null;
 
     }
+    public class ConfirmationTemplate
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
+
+
+    }
+    public enum FieldTypes
+    {
+        Checkbox = 0,
+        Text = 1,
+        Radio=2,
+        Datetime = 3,
+
+    };
 }
