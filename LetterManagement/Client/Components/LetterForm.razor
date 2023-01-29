@@ -1,0 +1,16 @@
+﻿@using LetterManagement.Shared.Models;
+
+<MudCard>
+    <MudText>Tên sinh viên: @letter?.Student?.Name</MudText>
+    <MudText>Mã số sinh viên: @letter?.Student?.StudentId</MudText>
+    <MudText>Khóa: @letter?.Student?.SchoolYear</MudText>
+    <MudText>Viện quản lý: @letter?.Student?.School?.Name</MudText>
+</MudCard>
+
+@code {
+    [Parameter]
+    public LetterTemplate? template { get; set; } = null;
+
+    [Parameter]
+    public Letter? letter { get; set; } = null;
+}

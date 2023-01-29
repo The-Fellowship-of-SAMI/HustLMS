@@ -41,4 +41,8 @@ namespace LetterManagement.Shared.Models
 
         public Department? DepartmentNeedToConfirm { get; set; }
     }
+    public class LetterAdditionalField : TemplateAdditionalField
+    {
+        public string? FieldValue { get; set; }
+    }
 }

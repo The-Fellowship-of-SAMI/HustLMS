@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LetterManagement.Server
 {
-    public class SeedData
+    public static class SeedData
     {
         public static async Task Seed(DataContext context)
         {
@@ -161,33 +161,68 @@ namespace LetterManagement.Server
                                 Name="Ý kiến của Viện quản lý"
                                 
                             }
+                      
                         }
                     },
                     new()
                     {
                         Id = new Guid(),
-                        Department = departments[0],
-                        Name = "Đơn xin đăng ký học chuyển tiếp từ cử nhân công nghệ lên kỹ sư",
-                        Receiver = @"Ban giám hiệu ĐH Bách khoa Hà Nội, Phòng Đào tạo",
+                        Department = departments.Single(x=>x.ShortName=="PDT"),
+                        Name = "ĐƠN XIN TIẾP NHẬN TRỞ LẠI HỌC",
+                        Receiver = @"HIỆU TRƯỞNG TRƯỜNG ĐHBK HÀ NỘI, TRƯỞNG PHÒNG ĐÀO TẠO ĐẠI HỌC",
                         AdditionalFields = new List<TemplateAdditionalField>
                         {
                             new()
                             {
                                 Id = new Guid(),
                                 FieldName =
-                                    "Tôi viết đơn này xin đăng ký học chuyển tiếp lên chương trình đào tạo kỹ sư ngành:",
-                                FieldType = "string"
+                                    "Nghỉ học từ kì:",
+                                FieldType = FieldTypes.Text
 
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Thời gian xin bắt đầu học tập theo chương trình đào tạo kỹ sư từ kỳ:",
-                                FieldType = "string"
+                                FieldName = "Lý do nghỉ học:",
+                                FieldType = FieldTypes.Text
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Nghỉ theo quyết định số:",
+                                FieldType = FieldTypes.Text
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Ngày ra quyết định:",
+                                FieldType = FieldTypes.Datetime
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Xin tiếp nhận trở lại học từ kỳ:",
+                                FieldType = FieldTypes.Text
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Năm học:",
+                                FieldType = FieldTypes.Text
+                            },
+                            new()
+                            {
+                                Id = new Guid(),
+                                FieldName = "Theo học cùng khóa:",
+                                FieldType = FieldTypes.Text
                             }
                         },
                         Footer =
-                            "Tôi xin cam kết hoàn toàn chịu trách nhiệm về việc đăng ký học tập khi được xét cho phép học chuyển tiếp."
+                            "Tôi xin cam đoan tuân theo mọi quyết định của Nhà trường về việc sắp xếp lớp học và chương trình học.",
+                        Description = @"Mang kèm theo:
+                                 Bản gốc (chính) quyết định nghỉ học tạm thời/tạm ngừng học tập/đình chỉ học tập.
+                                ¨Xác nhận của địa phương về chấp hành pháp luật
+                                ¨Xác nhận của Trung tâm Y tế trường ĐHBK Hà Nội về tình trạng sức khỏe (ghi trang sau, đối với sinh viên diện nghỉ học tạm thời vì lý do sức khỏe)"
                     }
                 };
 

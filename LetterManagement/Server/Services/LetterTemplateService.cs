@@ -20,9 +20,22 @@ namespace LetterManagement.Server.Services
             return await this._context.LetterTemplates.
                 Include(x=>x.AdditionalFields).
                 Include(x=>x.Department).
+                Include(x => x.ConfirmationsTemplate).
                 ToListAsync();
         }
 
+        public async Task<LetterTemplate> GetById(Guid letterId)
+        {
+            var emptyLetterTemplate = new LetterTemplate();
+
+            var letterTemplate = await this._context.LetterTemplates.
+                Include(x=>x.AdditionalFields).
+                Include(x=>x.Department).
+                Include(x=>x.ConfirmationsTemplate).
+                SingleOrDefaultAsync(x => x.Id == letterId);
+            if (letterTemplate is not null) return letterTemplate;
+            return emptyLetterTemplate;
+        }
         public async Task<LetterTemplate> create(LetterTemplate letterTemplate)
         {
             await this._context.LetterTemplates.AddAsync(letterTemplate);

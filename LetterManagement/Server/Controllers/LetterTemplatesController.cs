@@ -26,9 +26,9 @@ namespace LetterManagement.Server.Controllers
 
         // GET api/<LetterTemplatesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<LetterTemplate> Get(string id)
         {
-            return "value";
+            return await this._letterTemplateService.GetById(new Guid(id));
         }
 
         // POST api/<LetterTemplatesController>

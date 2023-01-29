@@ -1,0 +1,26 @@
+﻿@using LetterManagement.Client.StateContainer;
+@using LetterManagement.Shared.Models;
+@inject UserState UState;
+
+@code {
+    protected override void OnInitialized()
+    {
+        UState.Student = new Student()
+            {
+                Id = new Guid(),
+                Name = "Duc",
+                PhoneNumber = "0123456",
+                StudentId = 20195859,
+                Email = "duc.pa195859@sis.hust.edu.vn",
+                DateOfBirth = new DateTime(2001, 9, 7),
+                School = new()
+                {
+                    Id = new Guid(),
+                    Name = "Viện toán ứng dụng và tin học",
+                    ShortName = "SAMI"
+                },
+                SchoolYear = "K64",
+
+            };
+    }
+}
