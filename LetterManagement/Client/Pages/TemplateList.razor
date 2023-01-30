@@ -1,6 +1,8 @@
 ﻿@page "/templateList"
 @using LetterManagement.Shared.Models
 @inject HttpClient Http;
+@inject NavigationManager NavigationManager;
+
 @if (LetterTemplates is null)
 {
     <MudProgressLinear  Color="Color.Info" Indeterminate="true" />
@@ -22,7 +24,7 @@ else
                 <MudText GutterBottom="@true">Phiên bản: @template.ModifiedAt.ToString("dd.MM.yyyy")</MudText>
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="@Variant.Text" Color="@Color.Primary">Viết đơn</MudButton>
+                <MudButton Variant="@Variant.Text" Color="@Color.Primary" OnClick="@(() => OnClickCreateLetter(template.Id.ToString()))">Viết đơn</MudButton>
             </MudCardActions>
         </MudCard>
     }
@@ -31,11 +33,15 @@ else
 }
 @code {
     protected IEnumerable<LetterTemplate>? LetterTemplates { get; set; } = null;
-
     protected override async void OnInitialized()
     {
         this.LetterTemplates = await Http.GetFromJsonAsync<IEnumerable<LetterTemplate>>("api/LetterTemplates");
         StateHasChanged();
+    }
+
+    private void OnClickCreateLetter(string templateId)
+    {
+        NavigationManager.NavigateTo("CreateLetter/" + templateId);
     }
 
 }

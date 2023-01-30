@@ -1,11 +1,40 @@
 ﻿@page "/CreateLetter/{templateId}"
+@using LetterManagement.Shared.Models
+@using LetterManagement.Client.Components
 
-<PageTitle>Sent Letters</PageTitle>
+@inject HttpClient HttpClient;
+@inject NavigationManager NavigationManager;
 
+<LetterForm Template="@Template"></LetterForm>
+
+@if (Template != null)
+{
+    <PageTitle>Viết đơn @Template.Name</PageTitle>
+}
+
+else
+{
+    <MudProgressLinear  Color="Color.Primary" Indeterminate="true" />
+}
 
 @code {
     [Parameter]
-    public string templateId { get; set; }
+    public string? TemplateId { get; set; }
 
+    protected LetterTemplate? Template;
+    
+    protected override async void OnInitialized()
+    {
+        try
+        {
+            this.Template = await HttpClient.GetFromJsonAsync<LetterTemplate>($"/api/LetterTemplates/{TemplateId}");
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            NavigationManager.NavigateTo("templateList");
+        }
+        
+    }
 
 }

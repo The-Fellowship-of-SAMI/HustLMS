@@ -1,16 +1,66 @@
 ﻿@using LetterManagement.Shared.Models;
+@using LetterManagement.Client.StateContainer
+@inject UserState UserState;
 
-<MudCard>
-    <MudText>Tên sinh viên: @letter?.Student?.Name</MudText>
-    <MudText>Mã số sinh viên: @letter?.Student?.StudentId</MudText>
-    <MudText>Khóa: @letter?.Student?.SchoolYear</MudText>
-    <MudText>Viện quản lý: @letter?.Student?.School?.Name</MudText>
-</MudCard>
+@if (Template is not null)
+{
+    <MudCard Class="mx-auto pa-6">
+        <MudText Typo="Typo.h2" Align="Align.Center">@Template.Name</MudText>
+        <MudDivider/>
+        <MudText Typo="Typo.h6">Kính gửi: @Template.Receiver</MudText>
+        
+        @if (UserState.Student is not null)
+        {
+            <MudText>Tên sinh viên: @UserState.Student.Name</MudText>
+            <MudText>Mã số sinh viên: @UserState.Student.StudentId</MudText>
+            <MudText>Khóa: @UserState.Student.SchoolYear</MudText>
+            <MudText>Viện quản lý: @UserState.Student.School.Name</MudText>
+        }
+        else
+        {
+            <MudAlert>Tài khoản của sinh viên chưa tồn tại trong hệ thống!</MudAlert>
+        }
+        <MudForm>
+        @foreach(var additionalField in Template.AdditionalFields)
+        {
+            if (additionalField.FieldType == FieldTypes.Checkbox)
+            {
+                <MudText >@additionalField.FieldName</MudText>
+                var childFields = Template.AdditionalFields.
+                    Where(x => x.GroupFieldId == additionalField.Id).ToList();
+                Console.WriteLine("Child fields length", childFields.Count);
+                foreach (var child in childFields)
+                {
+                    if (child.FieldType== FieldTypes.Text)
+                    {
+                        <MudTextField T="string" Label="@child.FieldName"></MudTextField>
+                    }
+                    if (child.FieldType == FieldTypes.Datetime)
+                    {
+                        <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="@child.FieldName" InputType="InputType.Date" ></MudTextField>
+                    }
+                }
+            }
+            if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
+            {
+                <MudTextField T="string" Label="@additionalField.FieldName" ></MudTextField>
+            }
+            if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
+            {
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName"   InputType="InputType.Date"></MudTextField>
+            }
+        }
+        </MudForm>
+        <MudText Typo="Typo.body1">Ghi chú: @Template.Description</MudText>
+
+    </MudCard>
+}
+
 
 @code {
     [Parameter]
-    public LetterTemplate? template { get; set; } = null;
+    public LetterTemplate? Template { get; set; }
 
     [Parameter]
-    public Letter? letter { get; set; } = null;
+    public Letter? Letter { get; set; } = null;
 }
