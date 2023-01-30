@@ -84,7 +84,7 @@ namespace LetterManagement.Server
                     },
                 };
 
-                var LongTimeOffLetterGroupId = new Guid();
+                var longTimeOffLetterGroupId = Guid.NewGuid();
                 var letterTemplates = new List<LetterTemplate>
                 {
                     new()
@@ -107,7 +107,7 @@ namespace LetterManagement.Server
                             
                             new()
                             {
-                                Id = new Guid(),
+                                Id = longTimeOffLetterGroupId,
                                 FieldName = "Lý do xin nghỉ học dài hạn (đánh dấu X vào một hoặc nhiều ô tương ứng và ghi chi tiết nếu cần):",
                                 FieldType = FieldTypes.Checkbox
                             },
@@ -116,14 +116,14 @@ namespace LetterManagement.Server
                                 Id = new Guid(),
                                 FieldName = "Xin đi du học tự túc ngắn hạn (ghi rõ du học ở đâu, kèm theo bản copy Giấy mời du học/Giấy báo nhập trường):",
                                 FieldType = FieldTypes.Text,
-                                GroupFieldId = LongTimeOffLetterGroupId
+                                GroupFieldId = longTimeOffLetterGroupId
                             },
                             new()
                             {
                                 Id = new Guid(),
                                 FieldName = "Dành thời gian ôn thi lại đại học (sẽ thi lại trường nào):",
                                 FieldType = FieldTypes.Text,
-                                GroupFieldId = LongTimeOffLetterGroupId
+                                GroupFieldId = longTimeOffLetterGroupId
 
                             },
                             new()
@@ -131,21 +131,21 @@ namespace LetterManagement.Server
                                 Id = new Guid(),
                                 FieldName = "Do điều kiện kinh tế có khó khăn (nêu cụ thể):",
                                 FieldType = FieldTypes.Text,
-                                GroupFieldId = LongTimeOffLetterGroupId
+                                GroupFieldId = longTimeOffLetterGroupId
                             },
                             new()
                             {
                                 Id = new Guid(),
                                 FieldName = "Do sức khỏe không tốt (kèm hồ sơ bệnh án):",
                                 FieldType = FieldTypes.Text,
-                                GroupFieldId = LongTimeOffLetterGroupId
+                                GroupFieldId = longTimeOffLetterGroupId
                             },
                             new()
                             {
                                 Id = new Guid(),
                                 FieldName = "Lý do khác:",
                                 FieldType = FieldTypes.Text,
-                                GroupFieldId = LongTimeOffLetterGroupId
+                                GroupFieldId = longTimeOffLetterGroupId
                             },
                         },
                         Footer =

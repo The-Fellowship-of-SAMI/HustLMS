@@ -5,10 +5,10 @@
 @if (Template is not null)
 {
     <MudCard Class="mx-auto pa-6">
-        <MudText Typo="Typo.h2" Align="Align.Center">@Template.Name</MudText>
+        <MudText Class="gap-4" Typo="Typo.h2" Align="Align.Center">@Template.Name</MudText>
         <MudDivider/>
-        <MudText Typo="Typo.h6">Kính gửi: @Template.Receiver</MudText>
-        
+        <MudText Typo="Typo.h6" Class="gap-3">Kính gửi: @Template.Receiver</MudText>
+
         @if (UserState.Student is not null)
         {
             <MudText>Tên sinh viên: @UserState.Student.Name</MudText>
@@ -27,18 +27,19 @@
             {
                 <MudText >@additionalField.FieldName</MudText>
                 var childFields = Template.AdditionalFields.
-                    Where(x => x.GroupFieldId == additionalField.Id).ToList();
-                Console.WriteLine("Child fields length", childFields.Count);
+                    Where(x => x.GroupFieldId == additionalField.Id);
                 foreach (var child in childFields)
                 {
-                    if (child.FieldType== FieldTypes.Text)
+                    <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName" >
+                    @if (child.FieldType== FieldTypes.Text)
                     {
-                        <MudTextField T="string" Label="@child.FieldName"></MudTextField>
+                        <MudTextField T="string" Margin="Margin.Dense"  Variant="Variant.Outlined"></MudTextField>
                     }
-                    if (child.FieldType == FieldTypes.Datetime)
+                    @if (child.FieldType == FieldTypes.Datetime)
                     {
-                        <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="@child.FieldName" InputType="InputType.Date" ></MudTextField>
+                        <MudTextField T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date" ></MudTextField>
                     }
+                    </MudCheckBox>
                 }
             }
             if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
@@ -47,7 +48,7 @@
             }
             if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
             {
-                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName"   InputType="InputType.Date"></MudTextField>
+                <MudTextField Style="width: fit-content" T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName"   InputType="InputType.Date"></MudTextField>
             }
         }
         </MudForm>
