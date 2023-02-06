@@ -30,25 +30,46 @@
                     Where(x => x.GroupFieldId == additionalField.Id);
                 foreach (var child in childFields)
                 {
-                    <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName" >
-                    @if (child.FieldType== FieldTypes.Text)
+                    var letterAdditionalFieldInGroup = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
+                    if (letterAdditionalFieldInGroup is null)
                     {
-                        <MudTextField T="string" Margin="Margin.Dense"  Variant="Variant.Outlined"></MudTextField>
+                        letterAdditionalFieldInGroup = new LetterAdditionalField()
+                        {
+                            LetterTemplateAdditionalFieldId = additionalField.Id
+                        };
                     }
-                    @if (child.FieldType == FieldTypes.Datetime)
+                    <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName" 
+                                 bind-Checked="letterAdditionalFieldInGroup.FieldValueBool" CheckedChanged="() => updateAdditionalField(letterAdditionalFieldInGroup)">
+                    @if (letterAdditionalFieldInGroup.FieldValueBool == false)
                     {
-                        <MudTextField T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date" ></MudTextField>
+                        @if (child.FieldType== FieldTypes.Text)
+                        {
+                            <MudTextField T="string" Margin="Margin.Dense" Variant="Variant.Outlined" 
+                                          bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
+                        }
+                        @if (child.FieldType == FieldTypes.Datetime )
+                        {
+                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date" 
+                                          bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime" />
+                        }
+                        
                     }
                     </MudCheckBox>
                 }
             }
+            
+            var letterAdditionalField = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
+            if (letterAdditionalField is null)
+            {
+                letterAdditionalField = new LetterAdditionalField() { LetterTemplateAdditionalFieldId = additionalField.Id };
+            }
             if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
             {
-                <MudTextField T="string" Label="@additionalField.FieldName" ></MudTextField>
+                <MudTextField T="string" Label="@additionalField.FieldName" bind-Value="letterAdditionalField.FieldValueString"></MudTextField>
             }
             if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
             {
-                <MudTextField Style="width: fit-content" T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName"   InputType="InputType.Date"></MudTextField>
+                <MudTextField Style="width: fit-content" T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName"  bind-Value="letterAdditionalField.FieldValueDateTime"  InputType="InputType.Date"></MudTextField>
             }
         }
         </MudForm>
@@ -63,5 +84,18 @@
     public LetterTemplate? Template { get; set; }
 
     [Parameter]
-    public Letter? Letter { get; set; } = null;
+    public Letter Letter { get; set; } = new Letter();
+
+    public void updateAdditionalField(LetterAdditionalField newField)
+    {
+        var fields = Letter?.LetterAdditionalFields.Where(x => x.LetterTemplateAdditionalFieldId == newField.LetterTemplateAdditionalFieldId).ToList();
+
+        foreach (var field in fields)
+        {
+            field.FieldValueBool = newField.FieldValueBool;
+            field.FieldValueString = newField.FieldValueString;
+            field.FieldValueDateTime = newField.FieldValueDateTime;
+        }
+    }
+    
 }

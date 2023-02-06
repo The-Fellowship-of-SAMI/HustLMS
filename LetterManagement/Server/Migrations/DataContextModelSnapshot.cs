@@ -114,6 +114,34 @@ namespace LetterManagement.Server.Migrations
                     b.ToTable("Letters");
                 });
 
+            modelBuilder.Entity("LetterManagement.Shared.Models.LetterAdditionalField", b =>
+                {
+                    b.Property<Guid>("LetterAdditionalFieldId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("FieldValueBool")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("FieldValueDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FieldValueString")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("LetterId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("LetterTemplateAdditionalFieldId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LetterAdditionalFieldId");
+
+                    b.HasIndex("LetterId");
+
+                    b.ToTable("LetterAdditionalField");
+                });
+
             modelBuilder.Entity("LetterManagement.Shared.Models.LetterTemplate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -240,10 +268,6 @@ namespace LetterManagement.Server.Migrations
                     b.Property<string>("AdditionalText")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("FieldName")
                         .HasColumnType("TEXT");
 
@@ -261,10 +285,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasIndex("LetterTemplateId");
 
                     b.ToTable("TemplateAdditionalField");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("TemplateAdditionalField");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Confirmation", b =>
@@ -293,21 +313,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasDiscriminator().HasValue("Confirmation");
                 });
 
-            modelBuilder.Entity("LetterManagement.Shared.Models.LetterAdditionalField", b =>
-                {
-                    b.HasBaseType("LetterManagement.Shared.Models.TemplateAdditionalField");
-
-                    b.Property<string>("FieldValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("LetterId")
-                        .HasColumnType("TEXT");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasDiscriminator().HasValue("LetterAdditionalField");
-                });
-
             modelBuilder.Entity("LetterManagement.Shared.Models.ConfirmationTemplate", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.LetterTemplate", null)
@@ -334,6 +339,13 @@ namespace LetterManagement.Server.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("LetterManagement.Shared.Models.LetterAdditionalField", b =>
+                {
+                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
+                        .WithMany("LetterAdditionalFields")
+                        .HasForeignKey("LetterId");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.LetterTemplate", b =>
@@ -383,13 +395,6 @@ namespace LetterManagement.Server.Migrations
                         .HasForeignKey("LetterId");
 
                     b.Navigation("DepartmentNeedToConfirm");
-                });
-
-            modelBuilder.Entity("LetterManagement.Shared.Models.LetterAdditionalField", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
-                        .WithMany("LetterAdditionalFields")
-                        .HasForeignKey("LetterId");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>

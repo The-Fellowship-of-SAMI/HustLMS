@@ -21,6 +21,7 @@ namespace LetterManagement.Server.Services
                 Include(x=>x.AdditionalFields).
                 Include(x=>x.Department).
                 Include(x => x.ConfirmationsTemplate).
+                AsSplitQuery().
                 ToListAsync();
         }
 
@@ -32,6 +33,7 @@ namespace LetterManagement.Server.Services
                 Include(x=>x.AdditionalFields).
                 Include(x=>x.Department).
                 Include(x=>x.ConfirmationsTemplate).
+                AsSplitQuery().
                 SingleOrDefaultAsync(x => x.Id == letterId);
             if (letterTemplate is not null) return letterTemplate;
             return emptyLetterTemplate;

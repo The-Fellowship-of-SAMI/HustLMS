@@ -63,7 +63,7 @@ public class LetterService : ILetterService
             Include(x=>x.Manager).
             Include(x=>x.Template).
             Include(x => x.Manager.Department).
-
+            AsSplitQuery().
             ToListAsync();
         return letters;
     }
@@ -75,6 +75,7 @@ public class LetterService : ILetterService
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Student).
             Include(x=>x.Template).
+            AsSplitQuery().
             ToListAsync();
         return letters;
     }
@@ -87,6 +88,7 @@ public class LetterService : ILetterService
             Include(x=>x.Student).
             Include(x=>x.Manager).
             Include(x=>x.Template).
+            AsSplitQuery().
             ToListAsync();
         return letters;    
     }
@@ -94,8 +96,8 @@ public class LetterService : ILetterService
     public async Task<Letter> GetLetter(Guid letterId)
     {
         var letter = await this._context.Letters.
-            AsSplitQuery().
             Include(x => x.LetterAdditionalFields).
+            AsSplitQuery().
             Include(x => x.Student).
             Include(x => x.Manager).
             Include(x => x.Template).
