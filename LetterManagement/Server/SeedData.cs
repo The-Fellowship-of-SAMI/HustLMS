@@ -85,6 +85,8 @@ namespace LetterManagement.Server
                 };
 
                 var longTimeOffLetterGroupId = Guid.NewGuid();
+                var guidForToiNopDonXinNghiHocDaiHanTu = Guid.NewGuid();
+                var guidForXin_Di_Hoc_tu_tuc_ngan_han = Guid.NewGuid();
                 var letterTemplates = new List<LetterTemplate>
                 {
                     new()
@@ -98,7 +100,7 @@ namespace LetterManagement.Server
                         {
                             new()
                             {
-                                Id = new Guid(),
+                                Id = guidForToiNopDonXinNghiHocDaiHanTu,
                                 FieldName =
                                     "Tôi nộp đơn xin nghỉ học dài hạn từ (ghi ngày tháng năm bắt đầu nghỉ):",
                                 FieldType = FieldTypes.Datetime
@@ -113,7 +115,7 @@ namespace LetterManagement.Server
                             },
                             new()
                             {
-                                Id = new Guid(),
+                                Id = guidForXin_Di_Hoc_tu_tuc_ngan_han,
                                 FieldName = "Xin đi du học tự túc ngắn hạn (ghi rõ du học ở đâu, kèm theo bản copy Giấy mời du học/Giấy báo nhập trường):",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
@@ -252,7 +254,20 @@ namespace LetterManagement.Server
                         NoteToStudent = null,
                         ReceivedDate = DateTime.Today.AddDays(1),
                         FinishedDate = null,
-                        LetterAdditionalFields = null
+                        LetterAdditionalFields = new List<LetterAdditionalField>()
+                        {
+                            new()
+                            {
+                                FieldValueDateTime = DateTime.Today,
+                                LetterTemplateAdditionalFieldId =guidForToiNopDonXinNghiHocDaiHanTu
+                            },
+                            new()
+                            {
+                                LetterTemplateAdditionalFieldId = guidForXin_Di_Hoc_tu_tuc_ngan_han,
+                                FieldValueString = "Xin đi học ở Mỹ",
+                                FieldValueBool = true
+                            }
+                        }
                     },
                     new()
                     {

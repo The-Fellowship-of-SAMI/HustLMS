@@ -1,0 +1,95 @@
+﻿@using LetterManagement.Shared.Models
+@using MudBlazor.Extensions
+@inject HttpClient Http
+@page "/LetterDetail/{LetterId}"
+
+@if(Letter is null){
+    <MudAlert Severity="Severity.Error">Không tồn tại </MudAlert>
+}
+else
+{
+    <MudPaper Class="pa-16 ma-2" Elevation="3">
+        <MudText Class="gap-4" Typo="Typo.h2" Align="Align.Center">@Letter.Template?.Name</MudText>
+                <MudDivider/>
+                <MudText Typo="Typo.h6" Class="gap-3">Kính gửi: @Letter.Template?.Receiver</MudText>
+        
+                @if (Letter.Student is not null)
+                {
+                    <MudText>Tên sinh viên: @Letter.Student.Name</MudText>
+                    <MudText>Mã số sinh viên: @Letter.Student.StudentId</MudText>
+                    <MudText>Khóa: @Letter.Student.SchoolYear</MudText>
+                    <MudText>Viện quản lý: @Letter.Student.School.Name</MudText>
+                }
+                else
+                {
+                    <MudAlert>Tài khoản của sinh viên chưa tồn tại trong hệ thống!</MudAlert>
+                }
+                
+                @foreach(var additionalField in Letter?.Template?.AdditionalFields!)
+                {
+                    if (additionalField.FieldType == FieldTypes.Checkbox)
+                    {
+                        <MudText >@additionalField.FieldName</MudText>
+                        var childFields = Letter?.Template.AdditionalFields.
+                            Where(x => x.GroupFieldId == additionalField.Id);
+                        foreach (var child in childFields!)
+                        {
+                            var letterAdditionalFieldInGroup = this.GetFieldBasedOnLetterTemplate(child.Id);
+                            if (letterAdditionalFieldInGroup is null)
+                            {
+                                letterAdditionalFieldInGroup = new LetterAdditionalField()
+                                {
+                                    LetterTemplateAdditionalFieldId = additionalField.Id
+                                };
+                            }
+                            <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName" 
+                                          Disabled="true" Checked="letterAdditionalFieldInGroup.FieldValueBool?? false">
+        
+                                @if (child.FieldType== FieldTypes.Text)
+                                {
+                                    <MudText>@letterAdditionalFieldInGroup.FieldValueString</MudText>
+                                }
+                                @if (child.FieldType == FieldTypes.Datetime )
+                                {
+                                    <MudText>@letterAdditionalFieldInGroup.FieldValueDateTime</MudText>
+                                }
+                            </MudCheckBox>
+                        }
+                    }
+                    var letterAdditionalField = this.GetFieldBasedOnLetterTemplate(additionalField.Id);
+                    if (letterAdditionalField is null)
+                    {
+                        letterAdditionalField = new LetterAdditionalField() { LetterTemplateAdditionalFieldId = additionalField.Id };
+                    }
+                    if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
+                    {
+                        <MudText>@additionalField.FieldName: @letterAdditionalField.FieldValueString</MudText>
+                    }
+                    if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
+                    {
+                        <MudText>@additionalField.FieldName: @letterAdditionalField.FieldValueDateTime.ToIsoDateString()</MudText>
+                    }
+                }
+                <MudText Typo="Typo.body1">Ghi chú: @Letter?.Template.Description</MudText>
+    </MudPaper>
+}
+
+
+@code {
+    private Letter? Letter { get; set; }
+    
+    [Parameter]
+    public string? LetterId { get; set; }
+    
+    protected override async void OnInitialized()
+    {
+        this.Letter = await Http.GetFromJsonAsync<Letter>($"api/Letters/{LetterId}");
+        StateHasChanged();
+    }
+
+    private LetterAdditionalField? GetFieldBasedOnLetterTemplate(Guid letterTemplateAdditionalFieldGuid)
+    {
+       return  Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == letterTemplateAdditionalFieldGuid);
+
+    }
+}

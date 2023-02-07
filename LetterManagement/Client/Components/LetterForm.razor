@@ -5,8 +5,11 @@
 @if (Template is not null)
 {
     <MudCard Class="mx-auto pa-6">
-        <MudText Class="gap-4" Typo="Typo.h2" Align="Align.Center">@Template.Name</MudText>
-        <MudDivider/>
+        <MudCardHeader>
+            <MudText Class="gap-4" Typo="Typo.h2" Align="Align.Center">@Template.Name</MudText>
+        </MudCardHeader>
+        
+        <MudCardContent>
         <MudText Typo="Typo.h6" Class="gap-3">Kính gửi: @Template.Receiver</MudText>
 
         @if (UserState.Student is not null)
@@ -21,60 +24,64 @@
             <MudAlert>Tài khoản của sinh viên chưa tồn tại trong hệ thống!</MudAlert>
         }
         <MudForm>
-        @foreach(var additionalField in Template.AdditionalFields)
-        {
-            if (additionalField.FieldType == FieldTypes.Checkbox)
+            @foreach (var additionalField in Template.AdditionalFields)
             {
-                <MudText >@additionalField.FieldName</MudText>
-                var childFields = Template.AdditionalFields.
-                    Where(x => x.GroupFieldId == additionalField.Id);
-                foreach (var child in childFields)
+                if (additionalField.FieldType == FieldTypes.Checkbox)
                 {
-                    var letterAdditionalFieldInGroup = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
-                    if (letterAdditionalFieldInGroup is null)
+                    <MudText >@additionalField.FieldName</MudText>
+                    var childFields = Template.AdditionalFields.
+                        Where(x => x.GroupFieldId == additionalField.Id);
+                    foreach (var child in childFields)
                     {
-                        letterAdditionalFieldInGroup = new LetterAdditionalField()
+                        var letterAdditionalFieldInGroup = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
+                        if (letterAdditionalFieldInGroup is null)
                         {
-                            LetterTemplateAdditionalFieldId = additionalField.Id
-                        };
-                    }
-                    <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName" 
-                                 bind-Checked="letterAdditionalFieldInGroup.FieldValueBool" CheckedChanged="() => updateAdditionalField(letterAdditionalFieldInGroup)">
-                    @if (letterAdditionalFieldInGroup.FieldValueBool == false)
-                    {
-                        @if (child.FieldType== FieldTypes.Text)
-                        {
-                            <MudTextField T="string" Margin="Margin.Dense" Variant="Variant.Outlined" 
-                                          bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
+                            letterAdditionalFieldInGroup = new LetterAdditionalField()
+                            {
+                                LetterTemplateAdditionalFieldId = additionalField.Id
+                            };
                         }
-                        @if (child.FieldType == FieldTypes.Datetime )
-                        {
-                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date" 
-                                          bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime" />
-                        }
-                        
+                        <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName"
+                                     bind-Checked="letterAdditionalFieldInGroup.FieldValueBool"
+                                     CheckedChanged="() => updateAdditionalField(letterAdditionalFieldInGroup)">
+
+                            @if (child.FieldType == FieldTypes.Text)
+                            {
+                                <MudTextField T="string" Margin="Margin.Dense" Variant="Variant.Outlined"
+                                              bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
+                            }
+                            @if (child.FieldType == FieldTypes.Datetime)
+                            {
+                                <MudTextField T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date"
+                                              bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime"/>
+                            }
+
+
+                        </MudCheckBox>
                     }
-                    </MudCheckBox>
+                }
+                var letterAdditionalField = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
+                if (letterAdditionalField is null)
+                {
+                    letterAdditionalField = new LetterAdditionalField() { LetterTemplateAdditionalFieldId = additionalField.Id };
+                }
+                if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
+                {
+                    <MudTextField T="string" Label="@additionalField.FieldName" bind-Value="letterAdditionalField.FieldValueString"></MudTextField>
+                }
+                if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
+                {
+                    <MudTextField Style="width: fit-content" T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName" bind-Value="letterAdditionalField.FieldValueDateTime" InputType="InputType.Date"></MudTextField>
                 }
             }
-            
-            var letterAdditionalField = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
-            if (letterAdditionalField is null)
-            {
-                letterAdditionalField = new LetterAdditionalField() { LetterTemplateAdditionalFieldId = additionalField.Id };
-            }
-            if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
-            {
-                <MudTextField T="string" Label="@additionalField.FieldName" bind-Value="letterAdditionalField.FieldValueString"></MudTextField>
-            }
-            if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
-            {
-                <MudTextField Style="width: fit-content" T="DateTime?" Format="yyyy-MM-dd" Label="@additionalField.FieldName"  bind-Value="letterAdditionalField.FieldValueDateTime"  InputType="InputType.Date"></MudTextField>
-            }
-        }
         </MudForm>
         <MudText Typo="Typo.body1">Ghi chú: @Template.Description</MudText>
-
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" Style="align-items: center">
+                Gửi đơn
+            </MudButton>
+        </MudCardActions>
     </MudCard>
 }
 
@@ -84,7 +91,18 @@
     public LetterTemplate? Template { get; set; }
 
     [Parameter]
-    public Letter Letter { get; set; } = new Letter();
+    public Letter? Letter { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Letter == null) return;
+        
+        if (Letter.Student == null)
+        {
+            Letter.Student = UserState.Student;
+
+        }
+    }
 
     public void updateAdditionalField(LetterAdditionalField newField)
     {

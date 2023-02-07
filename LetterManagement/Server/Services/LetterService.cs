@@ -98,9 +98,12 @@ public class LetterService : ILetterService
         var letter = await this._context.Letters.
             Include(x => x.LetterAdditionalFields).
             AsSplitQuery().
-            Include(x => x.Student).
+            Include(x=>x.Student).
             Include(x => x.Manager).
             Include(x => x.Template).
+            AsSplitQuery().
+            Include(x => x.Student.School).
+            AsSplitQuery().Include(x=>x.Template.AdditionalFields).
             SingleOrDefaultAsync(x => x.Id == letterId);
         if (letter is not null) return letter;
         return null;

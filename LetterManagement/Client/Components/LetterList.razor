@@ -1,6 +1,6 @@
 ﻿@using LetterManagement.Shared.Models
 @using MudBlazor.Extensions
-
+@inject NavigationManager NavigationManager
 @if (Letters is null)
 {
     <MudProgressLinear  Color="Color.Info" Indeterminate="true" />
@@ -39,7 +39,7 @@ else
                         }
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Xem chi tiết</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="()=>navigate(letter.Id)" >Xem chi tiết</MudButton>
                     </MudCardActions>
                 </MudCard>
             }
@@ -51,4 +51,10 @@ else
 
     [Parameter]
     public IEnumerable<Letter>? Letters { get; set; } = null;
+
+    private void navigate(Guid letterId)
+    {
+        NavigationManager.NavigateTo($@"/LetterDetail/{letterId.ToString()}");
+    }
+
 }
