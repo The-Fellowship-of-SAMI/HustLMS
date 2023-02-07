@@ -1,4 +1,5 @@
-﻿using LetterManagement.Server.Services;
+﻿using LetterManagement.Server.Dtos;
+using LetterManagement.Server.Services;
 using LetterManagement.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace LetterManagement.Server.Controllers
         {
             this._letterService = letterService;
         }
-
+        
 
         [HttpGet("{letterId}")]
         public Task<Letter> GetLetter(string letterId)
@@ -41,6 +42,16 @@ namespace LetterManagement.Server.Controllers
         public Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(string departmentId)
         {
             return this._letterService.GetAllLettersByDepartmentId(new Guid(departmentId));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Letter>> CreateLetterWithDto(CreateLetterDto letterDto)
+        {
+            var letter = await this._letterService.CreateWithDto(letterDto);
+
+            if (letter is null) return BadRequest();
+
+            return letter;
         }
     }
 }

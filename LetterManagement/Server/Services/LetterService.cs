@@ -1,4 +1,5 @@
-﻿using LetterManagement.Shared.Models;
+﻿using LetterManagement.Server.Dtos;
+using LetterManagement.Shared.Models;
 
 using LetterManagement.Server.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,27 @@ public class LetterService : ILetterService
 
         var result = await _context.SaveChangesAsync() > 0;
         return  result ? letter : new Letter();
+    }
+
+    public async Task<Letter?> CreateWithDto(CreateLetterDto letterDto)
+    {
+        var student = await _context.Students.SingleOrDefaultAsync(x => x.StudentId == letterDto.StudentId);
+        if (letterDto.LetterTemplateId is null)
+        {
+            return null;
+        }
+        var template =
+            await _context.LetterTemplates.SingleOrDefaultAsync(x => x.Id == new Guid(letterDto.LetterTemplateId));
+        var letter = new Letter()
+        {
+            Template = template,
+            Student = student,
+            LetterAdditionalFields = letterDto.LetterAdditionalFields
+        };
+        Console.WriteLine(letterDto.LetterAdditionalFields[0]);
+        await this._context.Letters.AddAsync(letter);
+        var result = await _context.SaveChangesAsync() > 0;
+        return result ? letter : null;
     }
 
     public async Task<Letter> update(Guid id, Letter tNew)

@@ -9,27 +9,29 @@
 }
 else
 {
-    <MudStack>
-    @foreach (var template in LetterTemplates)
-    {
-        <MudCard Style="@(@"width: 60%")">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="@Typo.h5">@template.Name</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-      
-                <MudText>Đơn vị: @template.Department?.Name</MudText>
-                <MudText GutterBottom="@true">Phiên bản: @template.ModifiedAt.ToString("dd.MM.yyyy")</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="@Variant.Text" Color="@Color.Primary" OnClick="@(() => OnClickCreateLetter(template.Id.ToString()))">Viết đơn</MudButton>
-            </MudCardActions>
-        </MudCard>
-    }
-    </MudStack>
-
+    <MudPaper Class="pa-2 ma-auto" Elevation="0" Width="80%">
+        <MudGrid>
+                @foreach (var template in LetterTemplates)
+                {
+                    <MudItem xs="1" md="3">
+                            <MudCard Class="pa-auto ma-auto" Style="height: 100%">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="@Typo.h5">@template.Name</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText>Đơn vị: @template.Department?.Name</MudText>
+                                    <MudText GutterBottom="@true">Phiên bản: @template.ModifiedAt.ToString("dd.MM.yyyy")</MudText>
+                                </MudCardContent>
+                                <MudCardActions Class="mb-0">
+                                    <MudButton Variant="@Variant.Text" Color="@Color.Primary" OnClick="@(() => OnClickCreateLetter(template.Id.ToString()))">Viết đơn</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                    </MudItem>
+                }
+        </MudGrid>
+    </MudPaper>
 }
 @code {
     protected IEnumerable<LetterTemplate>? LetterTemplates { get; set; } = null;

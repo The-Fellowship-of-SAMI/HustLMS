@@ -1,6 +1,25 @@
-﻿@page "/"
+﻿@using LetterManagement.Client.StateContainer
 
-<PageTitle>Index</PageTitle>
+@inject UserState UserState;
 
-<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-<MudText Class="mb-8">Welcome</MudText>
+@page "/"
+
+<PageTitle> Thông tin sinh viên</PageTitle>
+
+
+<MudPaper Class="pa-5 ma-auto rounded" MaxWidth="60%" Elevation="3">
+            @if (UserState.Student is not null)
+            {
+                <MudStack Class="pa-1">
+                    <MudText Typo="Typo.h6" Class="ma-auto">Thông tin sinh viên</MudText>
+                    <MudText>Tên sinh viên: @UserState.Student.Name</MudText>
+                    <MudText>Mã số sinh viên: @UserState.Student.StudentId</MudText>
+                    <MudText>Khóa: @UserState.Student.SchoolYear</MudText>
+                    <MudText>Viện quản lý: @UserState.Student.School.Name</MudText>
+                    <MudText>Số điện thoại: @UserState.Student.PhoneNumber</MudText>
+                    <MudText>Email: @UserState.Student.Email</MudText>
+                    <MudText>Ngày tháng năm sinh: @UserState.Student.DateOfBirth.ToShortDateString()</MudText>
+
+                </MudStack>
+            }
+</MudPaper>
