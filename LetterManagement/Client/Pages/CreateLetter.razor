@@ -1,11 +1,12 @@
 ﻿@page "/CreateLetter/{templateId}"
 @using LetterManagement.Shared.Models
 @using LetterManagement.Client.Components
+@using LetterManagement.Client.StateContainer
 
 @inject HttpClient HttpClient;
 @inject NavigationManager NavigationManager;
-
-<LetterForm Template="@Template"></LetterForm>
+@inject UserState UserState;
+<LetterForm Template="@Template" Letter="_letter"></LetterForm>
 
 @if (Template != null)
 {
@@ -23,11 +24,18 @@ else
 
     protected LetterTemplate? Template;
     
+    private Letter? _letter { get; set; } 
+    
     protected override async void OnInitialized()
     {
         try
         {
             this.Template = await HttpClient.GetFromJsonAsync<LetterTemplate>($"/api/LetterTemplates/{TemplateId}");
+            this._letter = new Letter()
+            {
+                Student = UserState.Student,
+                Template = Template,
+            };
             StateHasChanged();
         }
         catch (Exception e)

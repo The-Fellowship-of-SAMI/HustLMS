@@ -102,7 +102,7 @@ namespace LetterManagement.Server
                             {
                                 Id = guidForToiNopDonXinNghiHocDaiHanTu,
                                 FieldName =
-                                    "Tôi nộp đơn xin nghỉ học dài hạn từ (ghi ngày tháng năm bắt đầu nghỉ):",
+                                    "Tôi nộp đơn xin nghỉ học dài hạn từ (ghi ngày tháng năm bắt đầu nghỉ)",
                                 FieldType = FieldTypes.Datetime
 
                             },
@@ -110,20 +110,20 @@ namespace LetterManagement.Server
                             new()
                             {
                                 Id = longTimeOffLetterGroupId,
-                                FieldName = "Lý do xin nghỉ học dài hạn (đánh dấu X vào một hoặc nhiều ô tương ứng và ghi chi tiết nếu cần):",
+                                FieldName = "Lý do xin nghỉ học dài hạn (đánh dấu X vào một hoặc nhiều ô tương ứng và ghi chi tiết nếu cần)",
                                 FieldType = FieldTypes.Checkbox
                             },
                             new()
                             {
                                 Id = guidForXin_Di_Hoc_tu_tuc_ngan_han,
-                                FieldName = "Xin đi du học tự túc ngắn hạn (ghi rõ du học ở đâu, kèm theo bản copy Giấy mời du học/Giấy báo nhập trường):",
+                                FieldName = "Xin đi du học tự túc ngắn hạn (ghi rõ du học ở đâu, kèm theo bản copy Giấy mời du học/Giấy báo nhập trường)",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Dành thời gian ôn thi lại đại học (sẽ thi lại trường nào):",
+                                FieldName = "Dành thời gian ôn thi lại đại học (sẽ thi lại trường nào)",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
 
@@ -131,21 +131,21 @@ namespace LetterManagement.Server
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Do điều kiện kinh tế có khó khăn (nêu cụ thể):",
+                                FieldName = "Do điều kiện kinh tế có khó khăn (nêu cụ thể)",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Do sức khỏe không tốt (kèm hồ sơ bệnh án):",
+                                FieldName = "Do sức khỏe không tốt (kèm hồ sơ bệnh án)",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Lý do khác:",
+                                FieldName = "Lý do khác",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
                             },
@@ -178,50 +178,50 @@ namespace LetterManagement.Server
                             {
                                 Id = new Guid(),
                                 FieldName =
-                                    "Nghỉ học từ kì:",
+                                    "Nghỉ học từ kì",
                                 FieldType = FieldTypes.Text
 
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Lý do nghỉ học:",
+                                FieldName = "Lý do nghỉ học",
                                 FieldType = FieldTypes.Text
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Nghỉ theo quyết định số:",
+                                FieldName = "Nghỉ theo quyết định số",
                                 FieldType = FieldTypes.Text
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Ngày ra quyết định:",
+                                FieldName = "Ngày ra quyết định",
                                 FieldType = FieldTypes.Datetime
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Xin tiếp nhận trở lại học từ kỳ:",
+                                FieldName = "Xin tiếp nhận trở lại học từ kỳ",
                                 FieldType = FieldTypes.Text
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Năm học:",
+                                FieldName = "Năm học",
                                 FieldType = FieldTypes.Text
                             },
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Theo học cùng khóa:",
+                                FieldName = "Theo học cùng khóa",
                                 FieldType = FieldTypes.Text
                             }
                         },
                         Footer =
                             "Tôi xin cam đoan tuân theo mọi quyết định của Nhà trường về việc sắp xếp lớp học và chương trình học.",
-                        Description = @"Mang kèm theo:
+                        Description = @"Mang kèm theo
                                  Bản gốc (chính) quyết định nghỉ học tạm thời/tạm ngừng học tập/đình chỉ học tập.
                                 ¨Xác nhận của địa phương về chấp hành pháp luật
                                 ¨Xác nhận của Trung tâm Y tế trường ĐHBK Hà Nội về tình trạng sức khỏe (ghi trang sau, đối với sinh viên diện nghỉ học tạm thời vì lý do sức khỏe)"

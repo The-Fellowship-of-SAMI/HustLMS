@@ -1,7 +1,11 @@
 ﻿@using LetterManagement.Shared.Models;
 @using LetterManagement.Client.StateContainer
+@using LetterManagement.Server.Dtos
 @inject UserState UserState;
+@inject HttpClient HttpClient;
+@inject NavigationManager NavigationManager;
 
+@* @inject DialogService DialogService; *@
 @if (Template is not null)
 {
     <MudPaper Width="70%" Class="mx-auto">
@@ -40,25 +44,18 @@
                             Where(x => x.GroupFieldId == additionalField.Id);
                         foreach (var child in childFields)
                         {
-                            var letterAdditionalFieldInGroup = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
-                            if (letterAdditionalFieldInGroup is null)
-                            {
-                                letterAdditionalFieldInGroup = new LetterAdditionalField()
-                                {
-                                    LetterTemplateAdditionalFieldId = additionalField.Id
-                                };
-                            }
+                            var letterAdditionalFieldInGroup = findOrCreateAdditionalField(additionalField.Id);
+                            
                             <MudStack Row="true">
-                        
+                                
                                 <MudCheckBox T="bool" Class="ma-auto" Size="Size.Medium" Label="@child.FieldName"
-                                             bind-Checked="letterAdditionalFieldInGroup.FieldValueBool"
-                                             CheckedChanged="() => updateAdditionalField(letterAdditionalFieldInGroup)">
+                                             @bind-Checked="letterAdditionalFieldInGroup.FieldValueBool">
                                 </MudCheckBox>
 
                                 @if (child.FieldType == FieldTypes.Text)
                                 {
                                     <MudTextField Class="pb-3" T="string" Margin="Margin.Dense"
-                                                  bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
+                                                  @bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
                                 }
                                 @if (child.FieldType == FieldTypes.Datetime)
                                 {
@@ -71,14 +68,11 @@
             
                         }
                     }
-                    var letterAdditionalField = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == additionalField.Id);
-                    if (letterAdditionalField is null)
-                    {
-                        letterAdditionalField = new LetterAdditionalField() { LetterTemplateAdditionalFieldId = additionalField.Id };
-                    }
+                    var letterAdditionalField = findOrCreateAdditionalField(additionalField.Id);
                     if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
                     {
-                        <MudTextField T="string" Label="@additionalField.FieldName" bind-Value="letterAdditionalField.FieldValueString"></MudTextField>
+                        <MudTextField  T="string" Label="@additionalField.FieldName" 
+                                       @bind-Value="@letterAdditionalField.FieldValueString"  ></MudTextField>
                     }
                     if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
                     {
@@ -87,16 +81,17 @@
                             <MudDatePicker Label="dd/MM/yyyy" HelperText="Click nút lịch để chọn ngày" 
                                            PickerVariant="PickerVariant.Dialog" Editable="true" 
                                            Mask="@(new DateMask("dd.MM.yyyy"))" 
-                                           DateFormat="dd.MM.yyyy" Placeholder="@DateTime.Today.ToShortDateString()" />
+                                           DateFormat="dd.MM.yyyy" Placeholder="@DateTime.Today.ToShortDateString()" 
+                                           @bind-Date="letterAdditionalField.FieldValueDateTime"
+                            />
                         </MudStack>
                     }
                 }
             </MudForm>
-
             <MudText Typo="Typo.body1" Class="pt-8">Ghi chú: @Template.Description</MudText>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary" Style="object-position: right">
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@_submitLetter">
                 Gửi đơn
             </MudButton>
         </MudCardActions>
@@ -112,27 +107,74 @@
     [Parameter]
     public Letter? Letter { get; set; }
 
+
     protected override void OnInitialized()
     {
-        if (Letter == null) return;
         
-        if (Letter.Student == null)
-        {
-            Letter.Student = UserState.Student;
-
-        }
     }
+    
+    
 
-    public void updateAdditionalField(LetterAdditionalField newField)
+    private async Task _submitLetter()
     {
-        var fields = Letter?.LetterAdditionalFields.Where(x => x.LetterTemplateAdditionalFieldId == newField.LetterTemplateAdditionalFieldId).ToList();
-
-        foreach (var field in fields)
+        try
         {
-            field.FieldValueBool = newField.FieldValueBool;
-            field.FieldValueString = newField.FieldValueString;
-            field.FieldValueDateTime = newField.FieldValueDateTime;
+            var createLetterDto = new CreateLetterDto()
+            {
+                StudentId = this.Letter!.Student!.StudentId,
+                LetterTemplateId = Template!.Id.ToString(),
+                LetterAdditionalFields = this.Letter!.LetterAdditionalFields
+                    
+            };
+            var result = await HttpClient.PostAsJsonAsync("/api/letters", createLetterDto);
+            
+            if(result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            // await DialogService.ShowMessageBox("error", "Chưa thể gửi đơn do có lỗi hệ thống, thử lại sau");
+            // StateHasChanged();
         }
     }
+    private void TestOnChange()
+    {
+        Console.WriteLine("Clicked Gửi đơn");
+        Console.WriteLine(Letter.LetterAdditionalFields.Count);
+        Console.WriteLine(Letter.Student.StudentId);
+        foreach (var letterLetterAdditionalField in this.Letter.LetterAdditionalFields)
+        {
+            Console.WriteLine($@"Text: {letterLetterAdditionalField.FieldValueString}. Checkbox: {letterLetterAdditionalField.FieldValueBool}. Datetime {letterLetterAdditionalField.FieldValueDateTime}");
+        }
+    }
+    private LetterAdditionalField? findOrCreateAdditionalField(Guid letterTemplateAdditionalFieldId)
+    {
+        if (Letter is null) return null;
+        foreach (var additionalField in Letter.LetterAdditionalFields)
+        {
+            if (additionalField.LetterTemplateAdditionalFieldId == letterTemplateAdditionalFieldId)
+            {
+                return additionalField;
+            }
+        }
+        var newLetterAdditionalField = new LetterAdditionalField()
+        {
+            LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldId
+        };
+        this.Letter.LetterAdditionalFields.Add(newLetterAdditionalField);
+        return newLetterAdditionalField;
+    }
+    // public void updateAdditionalField(LetterAdditionalField newField)
+    // {
+    //     var fields = Letter?.LetterAdditionalFields.Where(x => x.LetterTemplateAdditionalFieldId == newField.LetterTemplateAdditionalFieldId).ToList();
+    //
+    //     foreach (var field in fields)
+    //     {
+    //         field.FieldValueBool = newField.FieldValueBool;
+    //         field.FieldValueString = newField.FieldValueString;
+    //         field.FieldValueDateTime = newField.FieldValueDateTime;
+    //     }
+    // }
     
 }

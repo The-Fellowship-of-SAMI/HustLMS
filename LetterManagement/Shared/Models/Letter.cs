@@ -46,7 +46,7 @@ namespace LetterManagement.Shared.Models
         public Guid LetterAdditionalFieldId { get; set; } = new Guid();
         public Guid LetterTemplateAdditionalFieldId { get; set; }
         public string? FieldValueString { get; set; }
-        public bool? FieldValueBool { get; set; }
+        public bool FieldValueBool { get; set; } = false;
         public DateTime? FieldValueDateTime { get; set; }
     }
 }
