@@ -9,12 +9,11 @@
 }
 else
 {
-    <MudPaper Class="pa-2 ma-auto" Elevation="0" Width="80%">
-        <MudGrid>
+    <MudPaper Class="pa-2 ma-auto" Elevation="0" Width="50%">
+        <MudStack Spacing="4">
                 @foreach (var template in LetterTemplates)
                 {
-                    <MudItem xs="1" md="3">
-                            <MudCard Class="pa-auto ma-auto" Style="height: 100%">
+                            <MudCard Elevation="2">
                                 <MudCardHeader>
                                     <CardHeaderContent>
                                         <MudText Typo="@Typo.h5">@template.Name</MudText>
@@ -28,9 +27,8 @@ else
                                     <MudButton Variant="@Variant.Text" Color="@Color.Primary" OnClick="@(() => OnClickCreateLetter(template.Id.ToString()))">Viết đơn</MudButton>
                                 </MudCardActions>
                             </MudCard>
-                    </MudItem>
                 }
-        </MudGrid>
+        </MudStack>
     </MudPaper>
 }
 @code {

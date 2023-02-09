@@ -11,7 +11,7 @@
     <MudPaper Width="70%" Class="mx-auto">
     <MudCard Class="mx-auto pa-6 rounded" Elevation="3">
         <MudCardHeader>
-            <MudText Class="gap-4 ma-auto" Typo="Typo.h2" Align="Align.Center">@Template.Name</MudText>
+            <MudText Class="gap-4 ma-auto" Typo="Typo.h4" Align="Align.Center">@Template.Name</MudText>
         </MudCardHeader>
         
         <MudCardContent>
@@ -44,8 +44,7 @@
                             Where(x => x.GroupFieldId == additionalField.Id);
                         foreach (var child in childFields)
                         {
-                            var letterAdditionalFieldInGroup = findOrCreateAdditionalField(additionalField.Id);
-                            
+                            var letterAdditionalFieldInGroup = findOrCreateAdditionalField(child.Id);
                             <MudStack Row="true">
                                 
                                 <MudCheckBox T="bool" Class="ma-auto" Size="Size.Medium" Label="@child.FieldName"
