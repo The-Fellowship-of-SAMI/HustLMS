@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Reflection.Metadata;
+﻿using LetterManagement.Server.Models;
+using Microsoft.EntityFrameworkCore;
 using LetterManagement.Shared.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace LetterManagement.Server.Repositories
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Letter> Letters { get; set; }
         public DbSet<LetterTemplate> LetterTemplates { get; set; }
@@ -31,5 +31,7 @@ namespace LetterManagement.Server.Repositories
         //protected override void OnConfiguring(DbContextOptionsBuilder options)
         //    => options.UseSqlite($"Data Source={DbPath}");
     }
+    
+
 
 }

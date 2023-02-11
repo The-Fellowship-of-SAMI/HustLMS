@@ -1,14 +1,16 @@
-﻿using LetterManagement.Server.Repositories;
+﻿using LetterManagement.Server.Models;
+using LetterManagement.Server.Repositories;
 using LetterManagement.Shared.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetterManagement.Server
 {
     public static class SeedData
     {
-        public static async Task Seed(DataContext context)
+        public static async Task Seed(DataContext context, UserManager<ApplicationUser> userManager)
         {
-            if (!context.Students.Any())
+            if (!context.Students.Any() && !context.Manager.Any())
             {
                 var departments = new List<Department>
                 {
@@ -24,6 +26,7 @@ namespace LetterManagement.Server
                         ShortName="SAMI"
                     }
                 };
+                var managerId1 = Guid.NewGuid();
                 var managers = new List<Manager>()
                 {
                     new()
@@ -38,19 +41,20 @@ namespace LetterManagement.Server
                     },
                     new()
                     {
-                        Id = default,
-                        Name = "Nguyễn Thị C",
+                        Id = managerId1,
+                        Name = "Nguyễn Thị Phòng Đào Tạo",
                         Description = "Phụ trách về vấn chuyển sinh kĩ sư - thạc sĩ, cử nhân - thạc sĩ.",
                         DateOfBirth = new DateTime(1980, 8, 3),
-                        Email = "c.nguyenthi@hust.edu.vn",
+                        Email = "c.nguyenthipdt@hust.edu.vn",
                         PhoneNumber = "00101010101",
                         Department = departments[0] // PDT
                     }
                 };
+                var studentId1 = Guid.NewGuid();
                 var students = new List<Student>
                 {
                     new()
-                    {Id = new Guid(),
+                    {Id = studentId1,
                         Name = "Duc",
                         PhoneNumber = "0123456",
                         StudentId = 20195859,
@@ -83,7 +87,27 @@ namespace LetterManagement.Server
 
                     },
                 };
-
+                var appUsers = new List<ApplicationUser>()
+                {
+                    new ApplicationUser()
+                    {
+                        UserId = studentId1,
+                        Role = Roles.Student,
+                        Email = students[0].Email,
+                        UserName = students[0].Email
+                    },
+                    new ApplicationUser()
+                    {
+                        UserId = managerId1,
+                        Role = Roles.Manager,
+                        Email = managers[1].Email,
+                        UserName = managers[1].Email
+                    }
+                };
+                foreach (var user in appUsers)
+                {
+                    await userManager.CreateAsync(user, "123456");
+                }
                 var longTimeOffLetterGroupId = Guid.NewGuid();
                 var guidForToiNopDonXinNghiHocDaiHanTu = Guid.NewGuid();
                 var guidForXin_Di_Hoc_tu_tuc_ngan_han = Guid.NewGuid();
@@ -110,7 +134,7 @@ namespace LetterManagement.Server
                             new()
                             {
                                 Id = longTimeOffLetterGroupId,
-                                FieldName = "Lý do xin nghỉ học dài hạn (đánh dấu X vào một hoặc nhiều ô tương ứng và ghi chi tiết nếu cần)",
+                                FieldName = "Lý do xin nghỉ học dài hạn (chọn một hoặc nhiều ô và ghi chi tiết nếu cần)",
                                 FieldType = FieldTypes.Checkbox
                             },
                             new()

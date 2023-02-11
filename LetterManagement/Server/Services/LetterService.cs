@@ -98,6 +98,8 @@ public class LetterService : ILetterService
             Include(x=>x.Student).
             Include(x=>x.Template).
             AsSplitQuery().
+            Include(x=>x.Student.School).
+            Include(x => x.Manager.Department).
             ToListAsync();
         return letters;
     }

@@ -1,22 +1,26 @@
-﻿@page "/StudentLetterList"
+﻿@page "/ManagerLetterList"
 @using LetterManagement.Shared.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
 
 @using LetterManagement.Client.Components;
 @using LetterManagement.Client.StateContainer
 @inject HttpClient Http
 @inject UserState UserState;
+
 <LetterList Letters="Letters"></LetterList>
 
 @code {
 
 
-    private List<Letter>? Letters { get; set; } = null;
+    private List<Letter>? Letters { get; set; }
     
     protected override async void OnInitialized()
     {
         try
         {
-            this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/student/{UserState?.Student?.StudentId}");
+            this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/manager/"+"d82ca6f0-cc35-4cd6-8638-f5ac732843ae");
             StateHasChanged();
         }
         catch (Exception e)

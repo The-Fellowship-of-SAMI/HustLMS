@@ -22,5 +22,23 @@
                 SchoolYear = "K64",
 
             };
+
+        UState.Manager = new Manager()
+        {
+            
+                Id = default,
+                Name = "Nguyễn Thị C Phong Dao tao",
+                Description = "Phụ trách về vấn chuyển sinh kĩ sư - thạc sĩ, cử nhân - thạc sĩ.",
+                DateOfBirth = new DateTime(1980, 8, 3),
+                Email = "c.nguyenthi@hust.edu.vn",
+                PhoneNumber = "00101010101",
+                Department = new Department
+                {   Id = new Guid(),
+                    Name = "Phòng đào tạo",
+                    ShortName="PDT"
+
+                },
+            
+        };
     }
 }

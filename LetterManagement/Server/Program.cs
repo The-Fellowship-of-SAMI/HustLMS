@@ -1,12 +1,10 @@
 ﻿using LetterManagement.Server;
 using LetterManagement.Server.Extensions;
+using LetterManagement.Server.Models;
 using LetterManagement.Server.Repositories;
-using LetterManagement.Server.Services;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using LetterManagement.Server.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +16,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddApplicationServices(builder.Configuration);
-
+builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,8 +32,9 @@ if (app.Environment.IsDevelopment())
     try
     {
         var context = services.GetRequiredService<DataContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         await context.Database.MigrateAsync();
-        await SeedData.Seed(context);
+        await SeedData.Seed(context,userManager);
     }
     catch (Exception ex)
     {
@@ -62,4 +61,8 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.Run();
