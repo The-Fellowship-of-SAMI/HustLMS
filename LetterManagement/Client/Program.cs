@@ -12,6 +12,12 @@ builder.Services.AddScoped(sp =>
     {
         BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
     });
-builder.Services.AddSingleton<UserState>();
+
+
+
 builder.Services.AddMudServices();
+
+builder.Services.AddSingleton<UserState>();
+builder.Services.AddSingleton<TokenState>();
+
 await builder.Build().RunAsync();

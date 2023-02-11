@@ -50,4 +50,12 @@ public class StudentService : IStudentService
     {
         throw new NotImplementedException();
     }
+
+    public async Task<Student?> GetStudentById(Guid id)
+    {
+        return await this._context.Students.
+            Include(x=>x.School).
+            AsSplitQuery().
+            SingleOrDefaultAsync(x => x.Id == id);
+    }
 }

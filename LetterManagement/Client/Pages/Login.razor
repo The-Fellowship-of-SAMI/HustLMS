@@ -1,7 +1,17 @@
 ﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
+@using LetterManagement.Client.StateContainer
+@using LetterManagement.Shared.Dtos
+@using LetterManagement.Shared.Models
+@inject UserState UserState
+@inject TokenState TokenState
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
 @layout EmptyLayout
-<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+
+
+
+<EditForm Model="@loginForm" OnValidSubmit="OnValidSubmit">
 <DataAnnotationsValidator/>
 <MudStack>
     <MudText Typo="Typo.h4">Đăng nhập hệ thống</MudText>
@@ -10,9 +20,9 @@
         <MudCard>
             <MudCardContent>
                 <MudTextField Label="Email" Class="mt-3"
-                              @bind-Value="model.Email" For="@(() => model.Email)"/>
+                              @bind-Value="loginForm.Email" For="@(() => loginForm.Email)"/>
                 <MudTextField Label="Mật khẩu" HelperText="Tài khoản Office365" Class="mt-3"
-                              @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password"/>
+                              @bind-Value="loginForm.Password" For="@(() => loginForm.Password)" InputType="InputType.Password"/>
             </MudCardContent>
             <MudCardActions>
                 <MudButton ButtonType="ButtonType.Submit" 
@@ -27,7 +37,7 @@
 
 
 @code {
-    LoginForm model = new LoginForm();
+    LoginForm loginForm = new LoginForm();
     bool success;
 
     public class LoginForm
@@ -43,10 +53,44 @@
 
     }
 
-    private void OnValidSubmit(EditContext context)
+    private async Task OnValidSubmit(EditContext context)
     {
         success = true;
+        var loginResult = await ProcessLogin();
+
+        if (!loginResult)
+        {
+            Console.WriteLine("Failed to login");
+        }
         StateHasChanged();
+        NavigationManager.NavigateTo("/");
+        
+    }
+
+    private async Task<bool> ProcessLogin()
+    {
+        var loginResponse = await HttpClient.PostAsJsonAsync("api/account/login", loginForm);
+        if (!loginResponse.IsSuccessStatusCode)
+        {
+            return false;
+        }
+        var appUserDto = await loginResponse.Content.ReadFromJsonAsync<AppUserDto>();
+
+        if (appUserDto is null)
+        {
+            return false;
+        }
+        TokenState.SetTokenState(appUserDto);
+
+        if (appUserDto.Role == Roles.Student)
+        {
+            var student = await HttpClient.GetFromJsonAsync<Student>($"api/students/{appUserDto.UserId}");
+            if (student is not null)
+            {
+                this.UserState.Student = student;
+            }
+        }
+        return true;
     }
 
 }

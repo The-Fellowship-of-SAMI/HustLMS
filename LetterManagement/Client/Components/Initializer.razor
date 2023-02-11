@@ -1,27 +1,14 @@
 ﻿@using LetterManagement.Client.StateContainer;
 @using LetterManagement.Shared.Models;
 @inject UserState UState;
+@inject TokenState TokenState;
+@inject NavigationManager NavigationManager
 
 @code {
-    protected override void OnInitialized()
+    
+    protected override  void OnInitialized()
     {
-        UState.Student = new Student()
-            {
-                Id = new Guid(),
-                Name = "Phạm Anh Đức",
-                PhoneNumber = "0123456",
-                StudentId = 20195859,
-                Email = "duc.pa195859@sis.hust.edu.vn",
-                // DateOfBirth = new DateTime(2001, 9, 7),
-                School = new()
-                {
-                    Id = new Guid(),
-                    Name = "Viện toán ứng dụng và tin học",
-                    ShortName = "SAMI"
-                },
-                SchoolYear = "K64",
 
-            };
 
         UState.Manager = new Manager()
         {
@@ -40,5 +27,10 @@
                 },
             
         };
+        
+        if (TokenState.Token is null)
+        {
+            NavigationManager.NavigateTo("/login");   
+        }
     }
 }

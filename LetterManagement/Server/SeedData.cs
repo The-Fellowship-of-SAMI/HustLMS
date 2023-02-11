@@ -55,7 +55,7 @@ namespace LetterManagement.Server
                 {
                     new()
                     {Id = studentId1,
-                        Name = "Duc",
+                        Name = "Phạm Anh Đức Test Singleton",
                         PhoneNumber = "0123456",
                         StudentId = 20195859,
                         Email = "duc.pa195859@sis.hust.edu.vn",

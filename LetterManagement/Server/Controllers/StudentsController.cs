@@ -1,6 +1,7 @@
-﻿using LetterManagement.Server.Dtos;
-using LetterManagement.Server.Services;
+﻿using LetterManagement.Server.Services;
+using LetterManagement.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using StudentDto = LetterManagement.Server.Dtos.StudentDto;
 
 namespace LetterManagement.Server.Controllers
 {
@@ -20,6 +21,14 @@ namespace LetterManagement.Server.Controllers
         public async Task<ActionResult<IEnumerable<StudentDto>>> GetAll()
         {
             return  Ok(await this._studentService.getAll());
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Student>> GetStudentById(string id)
+        {
+            var student = await this._studentService.GetStudentById(new Guid(id));
+            if (student is not null) return Ok(student);
+            return NotFound();
         }
     }
 }

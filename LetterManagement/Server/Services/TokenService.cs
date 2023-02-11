@@ -13,10 +13,10 @@ public class TokenService
     {
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new(ClaimTypes.Role, user.Role.ToString())
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this-is-a-secret-key"));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

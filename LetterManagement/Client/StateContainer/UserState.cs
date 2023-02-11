@@ -13,10 +13,5 @@ namespace LetterManagement.Client.StateContainer
 
     }
 
-    public enum Roles
-    {
-        Student = 0,
-        Manager = 1, 
-        SuperManager = 2,
-    }
+
 }
