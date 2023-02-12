@@ -3,6 +3,7 @@
 @using LetterManagement.Client.StateContainer
 @inject HttpClient Http
 @inject UserState UserState
+@inject TokenState TokenState
 @page "/LetterDetail/{LetterId}"
 
 @if (Letter is null)
@@ -93,10 +94,10 @@ else
 
         <MudText Typo="Typo.body1" Class="pt-8">Ghi chú: @Letter?.Template.Description</MudText>
         
-        @if (UserState.Role == Roles.Manager || UserState.Role == Roles.SuperManager)
+        @if (TokenState.Role == Roles.Manager || TokenState.Role == Roles.SuperManager)
         {
             <MudTextField
-                Class="ma-auto" T="string" @bind-Value="Letter.NoteToStudent" Text="Ghi chú cho sinh viên">
+                Class="ma-auto pt-6" T="string" @bind-Value="Letter.NoteToStudent" Label="Ghi chú cho sinh viên">
                 
             </MudTextField>
         }
