@@ -2,7 +2,6 @@
 using LetterManagement.Server.Repositories;
 using LetterManagement.Shared.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LetterManagement.Server
 {
@@ -261,7 +260,7 @@ namespace LetterManagement.Server
                         Id = default,
                         Template = letterTemplates[0],
                         Student = students.SingleOrDefault((x=>x.StudentId==20195902)),
-                        Manager = null,
+                        Manager = managers[1],
                         NoteToStudent = null,
                         ReceivedDate = null,
                         FinishedDate = null,

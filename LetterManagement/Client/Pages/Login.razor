@@ -90,6 +90,14 @@
                 this.UserState.Student = student;
             }
         }
+        if (appUserDto.Role == Roles.Manager || appUserDto.Role == Roles.SuperManager)
+        {
+            var manager = await HttpClient.GetFromJsonAsync<Manager>($"api/manager/{appUserDto.UserId}");
+            if (manager is not null)
+            {
+                this.UserState.Manager = manager;
+            }
+        }
         return true;
     }
 

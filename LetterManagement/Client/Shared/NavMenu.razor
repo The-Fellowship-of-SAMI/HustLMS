@@ -1,5 +1,15 @@
-﻿<MudNavMenu>
+﻿@using LetterManagement.Client.StateContainer
+@using LetterManagement.Shared.Models
+@inject TokenState TokenState;
+<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Trang chính</MudNavLink>
     <MudNavLink Href="templateList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Mẫu đơn</MudNavLink>
-    <MudNavLink Href="studentLetterList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Send">Đơn đã gửi</MudNavLink>
+    @if (TokenState.Role == Roles.Student)
+    {
+        <MudNavLink Href="studentLetterList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Send">Đơn đã gửi</MudNavLink>
+    }
+    else
+    {
+        <MudNavLink Href="managerLetterList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Send">Đơn đảm nhận</MudNavLink>
+    }
 </MudNavMenu>

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LetterManagement.Shared.Models;
+﻿using LetterManagement.Shared.Models;
 
 using LetterManagement.Server.Repositories;
 using Microsoft.EntityFrameworkCore;

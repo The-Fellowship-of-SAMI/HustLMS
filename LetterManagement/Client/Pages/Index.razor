@@ -22,4 +22,16 @@
 
                 </MudStack>
             }
+            @if (UserState.Manager is not null)
+            {
+                <MudStack Class="pa-1">
+                    <MudText Typo="Typo.h6" Class="ma-auto">Thông tin</MudText>
+                    <MudText>Tên sinh viên: @UserState.Manager.Name</MudText>
+                    <MudText>Viện công tác: @UserState.Manager.Department?.Name</MudText>
+                    <MudText>Số điện thoại: @UserState.Manager.PhoneNumber</MudText>
+                    <MudText>Email: @UserState.Manager.Email</MudText>
+                    <MudText>Ngày tháng năm sinh: @UserState.Manager.DateOfBirth.ToShortDateString()</MudText>
+
+                </MudStack>
+            }
 </MudPaper>

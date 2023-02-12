@@ -19,6 +19,7 @@ namespace LetterManagement.Server.Extensions
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ILetterTemplateService, LetterTemplateService>();
             services.AddScoped<ILetterService, LetterService>();
+            services.AddScoped<IManagerService, ManagerService>();
             return services;
         }
     }

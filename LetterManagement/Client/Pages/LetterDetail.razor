@@ -1,6 +1,8 @@
 ﻿@using LetterManagement.Shared.Models
 @using MudBlazor.Extensions
+@using LetterManagement.Client.StateContainer
 @inject HttpClient Http
+@inject UserState UserState
 @page "/LetterDetail/{LetterId}"
 
 @if (Letter is null)
@@ -90,6 +92,14 @@ else
         </MudStack>
 
         <MudText Typo="Typo.body1" Class="pt-8">Ghi chú: @Letter?.Template.Description</MudText>
+        
+        @if (UserState.Role == Roles.Manager || UserState.Role == Roles.SuperManager)
+        {
+            <MudTextField
+                Class="ma-auto" T="string" @bind-Value="Letter.NoteToStudent" Text="Ghi chú cho sinh viên">
+                
+            </MudTextField>
+        }
     </MudPaper>
 }
 

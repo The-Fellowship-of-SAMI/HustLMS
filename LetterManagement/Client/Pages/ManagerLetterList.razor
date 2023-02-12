@@ -1,8 +1,5 @@
 ﻿@page "/ManagerLetterList"
 @using LetterManagement.Shared.Models
-@using System.Net.Http
-@using System.Net.Http.Json
-@using System.Threading.Tasks
 
 @using LetterManagement.Client.Components;
 @using LetterManagement.Client.StateContainer
@@ -20,7 +17,7 @@
     {
         try
         {
-            this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/manager/"+"d82ca6f0-cc35-4cd6-8638-f5ac732843ae");
+            this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/manager/{UserState.Manager.Id}");
             StateHasChanged();
         }
         catch (Exception e)

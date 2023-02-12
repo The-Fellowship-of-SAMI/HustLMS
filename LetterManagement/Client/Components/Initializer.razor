@@ -4,6 +4,8 @@
 @inject TokenState TokenState;
 @inject NavigationManager NavigationManager
 
+<CheckAuth/>
+
 @code {
     
     protected override  void OnInitialized()
@@ -27,10 +29,5 @@
                 },
             
         };
-        
-        if (TokenState.Token is null)
-        {
-            NavigationManager.NavigateTo("/login");   
-        }
     }
 }

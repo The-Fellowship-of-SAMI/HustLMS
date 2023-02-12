@@ -1,6 +1,10 @@
-﻿using LetterManagement.Server.Models;
+﻿using System.Text;
+using System.Text.Unicode;
+using LetterManagement.Server.Models;
 using LetterManagement.Server.Repositories;
 using LetterManagement.Server.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LetterManagement.Server.Extensions;
 
@@ -18,7 +22,18 @@ public static class IdentityServiceExtensions
             opt.Password.RequireLowercase = false;
 
         }).AddEntityFrameworkStores<DataContext>();
-        services.AddAuthentication();
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this-is-a-secret-key"));
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
         services.AddScoped<TokenService>();
         return services;
     }

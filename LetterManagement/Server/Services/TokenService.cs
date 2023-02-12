@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Text;
 using LetterManagement.Server.Models;
-using LetterManagement.Shared.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LetterManagement.Server.Services;
