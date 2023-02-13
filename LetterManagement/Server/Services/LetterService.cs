@@ -2,6 +2,7 @@
 using LetterManagement.Shared.Models;
 
 using LetterManagement.Server.Repositories;
+using LetterManagement.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace LetterManagement.Server.Services;
@@ -57,6 +58,15 @@ public class LetterService : ILetterService
         await this._context.Letters.AddAsync(letter);
         var result = await _context.SaveChangesAsync() > 0;
         return result ? letter : null;
+    }
+
+    public async Task<bool> UpdateLetterNoteDto(UpdateLetterNoteDto updateLetterNoteDto)
+    {
+        var letter = await this._context.Letters.SingleOrDefaultAsync(x => x.Id == updateLetterNoteDto.LetterId);
+        if (letter is null) return false;
+        letter.NoteToStudent = updateLetterNoteDto.NoteToStudent;
+        var isSuccess = await this._context.SaveChangesAsync() > 0;
+        return isSuccess;
     }
 
     public async Task<Letter> update(Guid id, Letter tNew)

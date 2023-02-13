@@ -1,5 +1,6 @@
 ﻿using LetterManagement.Server.Dtos;
 using LetterManagement.Server.Services;
+using LetterManagement.Shared.Dtos;
 using LetterManagement.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,14 @@ namespace LetterManagement.Server.Controllers
             if (letter is null) return BadRequest();
 
             return letter;
+        }
+
+        [HttpPut("noteToStudent")]
+        public async Task<ActionResult<bool>> UpdateNoteToStudent(UpdateLetterNoteDto letterNoteDto)
+        {
+            var updateResult = await this._letterService.UpdateLetterNoteDto(letterNoteDto);
+            if (updateResult) return Ok(updateResult);
+            else return NotFound(updateResult);
         }
     }
 }

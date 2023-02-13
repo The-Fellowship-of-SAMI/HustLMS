@@ -1,4 +1,5 @@
 ﻿using LetterManagement.Server.Dtos;
+using LetterManagement.Shared.Dtos;
 using LetterManagement.Shared.Models;
 namespace LetterManagement.Server.Services;
 
@@ -16,4 +17,6 @@ public interface ILetterService : ICrud<Letter>
     public Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(Guid departmentId);
 
     public Task<Letter?> CreateWithDto(CreateLetterDto letterDto);
+
+    public Task<bool> UpdateLetterNoteDto(UpdateLetterNoteDto updateLetterNoteDto);
 }

@@ -1,8 +1,8 @@
 ﻿@using LetterManagement.Shared.Models
 @using MudBlazor.Extensions
 @using LetterManagement.Client.StateContainer
+@using LetterManagement.Shared.Dtos
 @inject HttpClient Http
-@inject UserState UserState
 @inject TokenState TokenState
 @page "/LetterDetail/{LetterId}"
 
@@ -92,14 +92,31 @@ else
             }
         </MudStack>
 
-        <MudText Typo="Typo.body1" Class="pt-8">Ghi chú: @Letter?.Template.Description</MudText>
-        
+        <MudText Typo="Typo.body1" Class="pt-6 pb-2">Ghi chú: @Letter?.Template.Description</MudText>
+        @if ( Letter?.NoteToStudent is not null)
+        {
+            <MudText>Ghi chú cho sinh viên: @Letter.NoteToStudent</MudText>
+        }
         @if (TokenState.Role == Roles.Manager || TokenState.Role == Roles.SuperManager)
         {
-            <MudTextField
-                Class="ma-auto pt-6" T="string" @bind-Value="Letter.NoteToStudent" Label="Ghi chú cho sinh viên">
-                
-            </MudTextField>
+            <br/>
+            <MudCard >
+                <MudCardHeader Class="ma-auto"><MudText Typo="Typo.h6">Phần để lại ghi chú cho sinh viên</MudText></MudCardHeader>
+                <MudCardContent>
+                    <MudTextField
+                        Class="ma-auto pt-1" T="string" @bind-Value="Letter.NoteToStudent"
+                        Label="Ghi chú cho sinh viên">
+                    </MudTextField>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Class="ml-auto"
+                               OnClick="UpdateLetterNoteToStudent"
+                    >Thêm ghi chú</MudButton>
+                </MudCardActions>
+            </MudCard>
         }
     </MudPaper>
 }
@@ -111,9 +128,12 @@ else
     [Parameter]
     public string? LetterId { get; set; }
 
+    private string? previousNote;
+
     protected override async void OnInitialized()
     {
         this.Letter = await Http.GetFromJsonAsync<Letter>($"api/Letters/{LetterId}");
+        this.previousNote = this.Letter?.NoteToStudent;
         StateHasChanged();
     }
 
@@ -126,5 +146,19 @@ else
         };
         return result;
     }
-    
+
+    private async Task<bool> UpdateLetterNoteToStudent()
+    {
+        if (this.Letter is null) return false;
+        var updateLetterNoteDto = new UpdateLetterNoteDto()
+        {
+            LetterId = this.Letter.Id,
+            NoteToStudent = this.Letter.NoteToStudent!
+        };
+        this.previousNote = this.Letter.NoteToStudent;
+
+        var result = await this.Http.PutAsJsonAsync("api/Letters/noteToStudent", updateLetterNoteDto);
+        return result.IsSuccessStatusCode;
+    }
+
 }
