@@ -4,7 +4,6 @@
 @using LetterManagement.Shared.Dtos
 @using LetterManagement.Shared.Models
 @inject UserState UserState
-@inject TokenState TokenState
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
@@ -81,15 +80,20 @@
         {
             return false;
         }
-        var tokenState = TokenState.SetTokenState(appUserDto);
-        await this.localStorage.SetItemAsync<TokenState>("token", tokenState);
-
+        var newUserState = new UserState()
+        {
+            Token = appUserDto.Token,
+            Email = appUserDto.Email,
+            Role = appUserDto.Role,
+            UserId = UserState.UserId
+                
+        };
         if (appUserDto.Role == Roles.Student)
         {
             var student = await HttpClient.GetFromJsonAsync<Student>($"api/students/{appUserDto.UserId}");
             if (student is not null)
             {
-                this.UserState.Student = student;
+                newUserState.Student = student;
             }
             
         }
@@ -98,9 +102,10 @@
             var manager = await HttpClient.GetFromJsonAsync<Manager>($"api/manager/{appUserDto.UserId}");
             if (manager is not null)
             {
-                this.UserState.Manager = manager;
+                newUserState.Manager = manager;
             }
         }
+        await this.UserState.Set(newUserState);
         await this.localStorage.SetItemAsync<UserState>("user", this.UserState);
         return true;
     }

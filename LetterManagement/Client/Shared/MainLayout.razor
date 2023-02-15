@@ -34,15 +34,13 @@
     }
     
     
-    @code{
-
-        readonly MudTheme CustomTheme = new MudTheme()
+    readonly MudTheme CustomTheme = new MudTheme()
+    {
+        Palette = new Palette()
         {
-            Palette = new Palette()
-            {
-                Primary = new MudColor("#015a8f"),
+            Primary = new MudColor("#015a8f"),
 
-            },
-        };
-    }
+        },
+    };
+    
 }

@@ -19,7 +19,6 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<UserState>();
-builder.Services.AddSingleton<TokenState>();
 builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();

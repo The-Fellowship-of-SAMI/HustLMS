@@ -4,7 +4,7 @@
 @using LetterManagement.Client.StateContainer
 @using LetterManagement.Shared.Dtos
 @inject HttpClient Http
-@inject TokenState TokenState
+@inject UserState UserState
 @page "/LetterDetail/{LetterId}"
 
 @if (Letter is null)
@@ -98,7 +98,7 @@ else
         {
             <MudText>Ghi chú cho sinh viên: @Letter.NoteToStudent</MudText>
         }
-        @if (TokenState.Role == Roles.Manager || TokenState.Role == Roles.SuperManager)
+        @if (UserState.Role == Roles.Manager || UserState.Role == Roles.SuperManager)
         {
             <br />
             <MudCard>
@@ -143,6 +143,7 @@ else
     {
         this.Letter = await Http.GetFromJsonAsync<Letter>($"api/Letters/{LetterId}");
         this.previousNote = this.Letter?.NoteToStudent;
+        this.UserState.OnChange += StateHasChanged;
         StateHasChanged();
     }
 
@@ -188,4 +189,8 @@ else
         StateHasChanged();
     }
 
+    public void Dispose()
+    {
+        this.UserState.OnChange -= StateHasChanged;
+    }
 }

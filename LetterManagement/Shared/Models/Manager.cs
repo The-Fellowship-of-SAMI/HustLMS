@@ -15,6 +15,11 @@ namespace LetterManagement.Shared.Models
 
         public string PhoneNumber { get; set; } = "";
 
-        public Department? Department { get; set; } 
+        public Department? Department { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(DateOfBirth)}: {DateOfBirth}, {nameof(Email)}: {Email}, {nameof(PhoneNumber)}: {PhoneNumber}, {nameof(Department)}: {Department}";
+        }
     }
 }

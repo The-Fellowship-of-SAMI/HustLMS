@@ -21,5 +21,9 @@ namespace LetterManagement.Shared.Models
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
         public DateTime LastLogin { get; set; } = DateTime.Now;
 
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(StudentId)}: {StudentId}, {nameof(Email)}: {Email}, {nameof(PhoneNumber)}: {PhoneNumber}, {nameof(School)}: {School}, {nameof(SchoolYear)}: {SchoolYear}, {nameof(DateOfBirth)}: {DateOfBirth}, {nameof(LastLogin)}: {LastLogin}";
+        }
     }
 }

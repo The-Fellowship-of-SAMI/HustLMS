@@ -1,7 +1,6 @@
 ﻿@using LetterManagement.Client.StateContainer;
 @inject NavigationManager NavigationManager;
 @inject UserState UserState;
-@inject TokenState TokenState;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 
@@ -11,7 +10,6 @@
     private async void ProcessLogout()
     {
         this.UserState.ClearState();
-        this.TokenState.ClearState();
 
         await this.localStorage.ClearAsync();
 

@@ -14,6 +14,8 @@
     
     protected override async void OnInitialized()
     {
+        UserState.OnChange += StateHasChanged;
+
         try
         {
             this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/student/{UserState?.Student?.StudentId}");
@@ -25,4 +27,10 @@
         }
 
     }
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
+    }
+    
+
 }

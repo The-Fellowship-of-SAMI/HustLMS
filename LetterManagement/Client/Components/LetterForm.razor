@@ -109,7 +109,12 @@
 
     protected override void OnInitialized()
     {
-        
+        UserState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
     }
     
     
