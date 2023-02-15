@@ -19,4 +19,6 @@ public interface ILetterService : ICrud<Letter>
     public Task<Letter?> CreateWithDto(CreateLetterDto letterDto);
 
     public Task<bool> UpdateLetterNoteDto(UpdateLetterNoteDto updateLetterNoteDto);
+
+    public Task<bool> UpdateLetterState(LetterStateDto letterStateDto);
 }

@@ -108,14 +108,18 @@ else
                 </MudCardContent>
                 <MudCardActions>
                     <MudStack Spacing="1" Row="true">
-                        <MudButton ButtonType="ButtonType.Reset"
+                        <MudButton ButtonType="ButtonType.Button"
                            Variant="Variant.Filled"
-                           Color="Color.Success"
+                           Color="Color.Primary"
                            Class="ml-auto"
                            OnClick="UpdateLetterNoteToStudent">Thêm ghi chú</MudButton>
                         <MudButton ButtonType="ButtonType.Submit"
                            Variant="Variant.Filled"
-                           Color="Color.Primary">
+                           Color="Color.Success"
+                            OnClick="UpdateState"
+                           Disabled="this.Letter?.FinishedDate != null"
+                        >
+                           
                             Xác nhận hoàn thành
                         </MudButton>
                     </MudStack>
@@ -163,6 +167,24 @@ else
 
         var result = await this.Http.PutAsJsonAsync("api/Letters/noteToStudent", updateLetterNoteDto);
         return result.IsSuccessStatusCode;
+    }
+
+    private async Task UpdateState()
+    {
+        if (this.Letter is null) return;
+
+        this.Letter.FinishedDate = DateTime.Now;
+
+        var updateLetterStateDto = new LetterStateDto()
+            {
+                LetterId = Letter.Id,
+                ReceivedDate = Letter.ReceivedDate,
+                FinishedDate = Letter.FinishedDate
+
+            };
+
+        var result = await this.Http.PutAsJsonAsync("api/Letters/state", updateLetterStateDto);
+        StateHasChanged();
     }
 
 }

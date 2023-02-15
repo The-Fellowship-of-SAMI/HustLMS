@@ -65,8 +65,8 @@ public class LetterService : ILetterService
         var letter = await this._context.Letters.SingleOrDefaultAsync(x => x.Id == updateLetterNoteDto.LetterId);
         if (letter is null) return false;
         letter.NoteToStudent = updateLetterNoteDto.NoteToStudent;
-        var isSuccess = await this._context.SaveChangesAsync() > 0;
-        return isSuccess;
+        await this._context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<Letter> update(Guid id, Letter tNew)
@@ -141,5 +141,16 @@ public class LetterService : ILetterService
             SingleOrDefaultAsync(x => x.Id == letterId);
         if (letter is not null) return letter;
         return null;
+    }
+
+    public async Task<bool> UpdateLetterState(LetterStateDto letterStateDto)
+    {
+        var letter = await this._context.Letters.SingleOrDefaultAsync(x => x.Id == letterStateDto.LetterId);
+        if (letter is null) return false;
+        letter.ReceivedDate = letterStateDto.ReceivedDate;
+        letter.FinishedDate = letterStateDto.FinishedDate;
+
+        await this._context.SaveChangesAsync();
+        return true;
     }
 }

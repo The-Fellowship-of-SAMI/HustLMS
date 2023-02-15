@@ -55,9 +55,17 @@ namespace LetterManagement.Server.Controllers
         }
 
         [HttpPut("noteToStudent")]
-        public async Task<ActionResult<bool>> UpdateNoteToStudent(UpdateLetterNoteDto letterNoteDto)
+        public async Task<ActionResult<bool>> UpdateNoteToStudent([FromBody] UpdateLetterNoteDto letterNoteDto)
         {
             var updateResult = await this._letterService.UpdateLetterNoteDto(letterNoteDto);
+            if (updateResult) return Ok(updateResult);
+            else return NotFound(updateResult);
+        }
+
+        [HttpPut("state")]
+        public async Task<ActionResult> UpdateState([FromBody] LetterStateDto letterStateDto)
+        {
+            var updateResult = await this._letterService.UpdateLetterState(letterStateDto);
             if (updateResult) return Ok(updateResult);
             else return NotFound(updateResult);
         }
