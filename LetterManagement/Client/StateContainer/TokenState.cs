@@ -16,7 +16,7 @@ public class TokenState
 
     public string? Email { get; set; }
 
-    public void SetTokenState(AppUserDto appUserDto)
+    public TokenState SetTokenState(AppUserDto appUserDto)
     {
         var handler = new JsonWebTokenHandler();
         var token = handler.ReadJsonWebToken(appUserDto.Token);
@@ -27,5 +27,13 @@ public class TokenState
          Email = appUserDto.Email;
 
          ExpiredDate = token.ValidTo;
+
+        return this;
+    }
+
+    public void ClearState()
+    {
+        this.Token = null;
+        this.Email = null;
     }
 }

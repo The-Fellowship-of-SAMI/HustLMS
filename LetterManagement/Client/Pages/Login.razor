@@ -7,6 +7,7 @@
 @inject TokenState TokenState
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
 @layout EmptyLayout
 
 
@@ -64,7 +65,7 @@
         }
         StateHasChanged();
         NavigationManager.NavigateTo("/");
-        
+
     }
 
     private async Task<bool> ProcessLogin()
@@ -80,7 +81,8 @@
         {
             return false;
         }
-        TokenState.SetTokenState(appUserDto);
+        var tokenState = TokenState.SetTokenState(appUserDto);
+        await this.localStorage.SetItemAsync<TokenState>("token", tokenState);
 
         if (appUserDto.Role == Roles.Student)
         {
@@ -89,6 +91,7 @@
             {
                 this.UserState.Student = student;
             }
+            
         }
         if (appUserDto.Role == Roles.Manager || appUserDto.Role == Roles.SuperManager)
         {
@@ -98,6 +101,7 @@
                 this.UserState.Manager = manager;
             }
         }
+        await this.localStorage.SetItemAsync<UserState>("user", this.UserState);
         return true;
     }
 

@@ -1,33 +1,35 @@
 ﻿@using LetterManagement.Client.StateContainer;
 @using LetterManagement.Shared.Models;
-@inject UserState UState;
+@inject UserState UserState;
 @inject TokenState TokenState;
 @inject NavigationManager NavigationManager
-
-<CheckAuth/>
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 @code {
-    
-    protected override  void OnInitialized()
+
+    protected override async void OnInitialized()
     {
-
-
-        UState.Manager = new Manager()
+        try
         {
-            
-                Id = default,
-                Name = "Nguyễn Thị C Phong Dao tao",
-                Description = "Phụ trách về vấn chuyển sinh kĩ sư - thạc sĩ, cử nhân - thạc sĩ.",
-                DateOfBirth = new DateTime(1980, 8, 3),
-                Email = "c.nguyenthi@hust.edu.vn",
-                PhoneNumber = "00101010101",
-                Department = new Department
-                {   Id = new Guid(),
-                    Name = "Phòng đào tạo",
-                    ShortName="PDT"
+            var token = await localStorage.GetItemAsync<TokenState>("token");
+            var user = await this.localStorage.GetItemAsync<UserState>("user");
+            Console.WriteLine(token.Token);
+            if (token.Token is null || user is null)
+            {
+                NavigationManager.NavigateTo("/login");
 
-                },
-            
-        };
+            }
+            this.TokenState = token;
+            this.UserState = user;
+            StateHasChanged();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.StackTrace);
+            NavigationManager.NavigateTo("/login");
+        }
+
+
+
     }
 }

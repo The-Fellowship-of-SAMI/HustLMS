@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using LetterManagement.Client;
 using LetterManagement.Client.StateContainer;
 using Microsoft.AspNetCore.Components.Web;
@@ -19,5 +20,6 @@ builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<UserState>();
 builder.Services.AddSingleton<TokenState>();
+builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();

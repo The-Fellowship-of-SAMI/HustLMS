@@ -14,7 +14,7 @@ else
 {
     <MudPaper Class="mx-auto pa-6 rounded" Elevation="3" Width="72%">
         <MudText Class="gap-4 ma-auto pb-3" Typo="Typo.h4" Align="Align.Center">@Letter.Template?.Name</MudText>
-        <MudDivider/>
+        <MudDivider />
         <MudText Typo="Typo.h6" Class="gap-3">Kính gửi: @Letter.Template?.Receiver</MudText>
 
         @if (Letter.Student is not null)
@@ -57,15 +57,15 @@ else
             {
                 if (additionalField.FieldType == FieldTypes.Checkbox)
                 {
-                    <MudText >@additionalField.FieldName</MudText>
+                    <MudText>@additionalField.FieldName</MudText>
                     var childFields = Letter?.Template.AdditionalFields.
-                        Where(x => x.GroupFieldId == additionalField.Id);
+                    Where(x => x.GroupFieldId == additionalField.Id);
                     foreach (var child in childFields!)
                     {
                         var letterAdditionalFieldInGroup = this.GetFieldBasedOnLetterTemplate(child.Id);
- 
+
                         <MudCheckBox T="bool" Size="Size.Medium" Label="@child.FieldName"
-                                     Disabled="true" Checked="letterAdditionalFieldInGroup.FieldValueBool">
+                     Disabled="true" Checked="letterAdditionalFieldInGroup.FieldValueBool">
 
                             @if (child.FieldType == FieldTypes.Text)
                             {
@@ -81,11 +81,11 @@ else
 
                 var letterAdditionalField = this.GetFieldBasedOnLetterTemplate(additionalField.Id);
 
-                if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
+                if (additionalField is { FieldType: FieldTypes.Text, GroupFieldId: null })
                 {
                     <MudText>@additionalField.FieldName: @letterAdditionalField.FieldValueString</MudText>
                 }
-                if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
+                if (additionalField is { FieldType: FieldTypes.Datetime, GroupFieldId: null })
                 {
                     <MudText>@additionalField.FieldName: @letterAdditionalField.FieldValueDateTime.ToIsoDateString()</MudText>
                 }
@@ -93,28 +93,32 @@ else
         </MudStack>
 
         <MudText Typo="Typo.body1" Class="pt-6 pb-2">Ghi chú: @Letter?.Template.Description</MudText>
-        @if ( Letter?.NoteToStudent is not null)
+        @if (Letter?.NoteToStudent is not null)
         {
             <MudText>Ghi chú cho sinh viên: @Letter.NoteToStudent</MudText>
         }
         @if (TokenState.Role == Roles.Manager || TokenState.Role == Roles.SuperManager)
         {
-            <br/>
-            <MudCard >
-                <MudCardHeader Class="ma-auto"><MudText Typo="Typo.h6">Phần để lại ghi chú cho sinh viên</MudText></MudCardHeader>
+            <br />
+            <MudCard>
                 <MudCardContent>
-                    <MudTextField
-                        Class="ma-auto pt-1" T="string" @bind-Value="Letter.NoteToStudent"
-                        Label="Ghi chú cho sinh viên">
+                    <MudTextField Class="ma-auto pt-1" T="string" @bind-Value="Letter.NoteToStudent"
+                          Label="Ghi chú cho sinh viên">
                     </MudTextField>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               Class="ml-auto"
-                               OnClick="UpdateLetterNoteToStudent"
-                    >Thêm ghi chú</MudButton>
+                    <MudStack Spacing="1" Row="true">
+                        <MudButton ButtonType="ButtonType.Reset"
+                           Variant="Variant.Filled"
+                           Color="Color.Success"
+                           Class="ml-auto"
+                           OnClick="UpdateLetterNoteToStudent">Thêm ghi chú</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary">
+                            Xác nhận hoàn thành
+                        </MudButton>
+                    </MudStack>
                 </MudCardActions>
             </MudCard>
         }
@@ -141,9 +145,9 @@ else
     {
         var result = Letter?.LetterAdditionalFields.SingleOrDefault(x => x.LetterTemplateAdditionalFieldId == letterTemplateAdditionalFieldGuid);
         if (result is null) return new LetterAdditionalField()
-        {
-            LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldGuid
-        };
+            {
+                LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldGuid
+            };
         return result;
     }
 
@@ -151,10 +155,10 @@ else
     {
         if (this.Letter is null) return false;
         var updateLetterNoteDto = new UpdateLetterNoteDto()
-        {
-            LetterId = this.Letter.Id,
-            NoteToStudent = this.Letter.NoteToStudent!
-        };
+            {
+                LetterId = this.Letter.Id,
+                NoteToStudent = this.Letter.NoteToStudent!
+            };
         this.previousNote = this.Letter.NoteToStudent;
 
         var result = await this.Http.PutAsJsonAsync("api/Letters/noteToStudent", updateLetterNoteDto);

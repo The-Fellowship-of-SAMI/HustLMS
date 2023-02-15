@@ -10,7 +10,11 @@ namespace LetterManagement.Client.StateContainer
 
         public Manager? Manager { get; set; }
 
-
+        public void ClearState()
+        {
+            this.Student = null;
+            this.Manager = null;
+        }
     }
 
 

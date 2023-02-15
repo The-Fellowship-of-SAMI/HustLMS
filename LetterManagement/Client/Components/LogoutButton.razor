@@ -1,0 +1,20 @@
+﻿@using LetterManagement.Client.StateContainer;
+@inject NavigationManager NavigationManager;
+@inject UserState UserState;
+@inject TokenState TokenState;
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
+
+
+<MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="ProcessLogout"/>
+
+@code {
+    private async void ProcessLogout()
+    {
+        this.UserState.ClearState();
+        this.TokenState.ClearState();
+
+        await this.localStorage.ClearAsync();
+
+        NavigationManager.NavigateTo("/login");
+    }
+}
