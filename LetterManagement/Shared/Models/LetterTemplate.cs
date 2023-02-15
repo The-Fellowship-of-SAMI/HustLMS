@@ -18,16 +18,20 @@
 
     public class TemplateAdditionalField
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public Guid? GroupFieldId { get; set; }
 
-        public string? FieldName { get; set; } = null;
+        public string? FieldName { get; set; } = "";
 
         public FieldTypes? FieldType { get; set; } = null;
 
         public string? AdditionalText { get; set; } = null;
 
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(GroupFieldId)}: {GroupFieldId}, {nameof(FieldName)}: {FieldName}, {nameof(FieldType)}: {FieldType}, {nameof(AdditionalText)}: {AdditionalText}";
+        }
     }
     public class ConfirmationTemplate
     {

@@ -1,0 +1,182 @@
+﻿@page "/CreateLetterTemplate"
+@using LetterManagement.Shared.Models;
+@using LetterManagement.Client.StateContainer
+@using LetterManagement.Server.Dtos
+
+@inject UserState UserState;
+@inject HttpClient HttpClient;
+@inject NavigationManager NavigationManager;
+
+
+<MudPaper Width="70%" Class="mx-auto">
+    <MudCard Class="mx-auto pa-6 rounded" Elevation="3">
+
+        <MudStack Row="true" Class="ma-auto">
+            <MudText Class="gap-4 ma-auto" Typo="Typo.h5" Align="Align.Center">Tiêu đề:</MudText>
+            <MudTextField Class="pb-5" T="string" @bind-Value="_template.Name"></MudTextField>
+        </MudStack>
+
+        <MudCardContent>
+
+            <MudStack Row="true" Class="ma-auto">
+                <MudText Class="gap-4 ma-auto" Typo="Typo.h6" Align="Align.Center">Kính gửi:</MudText>
+                <MudTextField Class="pb-4" T="string" @bind-Value="_template.Receiver"></MudTextField>
+            </MudStack>
+            <MudGrid Class="pl-20 pr-20" Spacing="1">
+                <MudItem xs="6" sm="2">
+                    <MudText>Tên sinh viên:</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="4">
+                    <MudText>..........................</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="2">
+                    <MudText>Mã số sinh viên:</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="4">
+                    <MudText>..........................</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="2">
+                    <MudText>Khóa:</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="4">
+                    <MudText>..........................</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="2">
+                    <MudText>Viện quản lý:</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="4">
+                    <MudText>..........................</MudText>
+                </MudItem>
+            </MudGrid>
+
+            <MudStack Row="true" Spacing="1">
+                <MudText Class="ma-auto">
+                    Số các mục nhập dữ liệu:
+                </MudText>
+                <MudNumericField
+                    Class="pb-4"
+                    T="int"
+                    Min="1"
+                    Max="20"
+                    Required="true"
+                    Value="1"
+                    ValueChanged="i => OnTotalFieldsChange(i)">
+                </MudNumericField>
+            </MudStack>
+            @for (var i = 1; i <= totalFields; i++)
+            {
+                var label = "Mục " + i + ": ";
+                var fieldListElement = _fieldsList[i-1];
+                <MudStack Row="true" Style="ma-auto">
+                    <MudTextField
+                        T="string"
+                        Label=@label
+                        @bind-Value=@fieldListElement.TemplateField.FieldName
+                        >
+                    </MudTextField>
+                    <MudSelect T="FieldTypes" Label="Kiểu dữ liệu" AnchorOrigin="Origin.BottomCenter" >
+                        <MudSelectItem T="FieldTypes" Value="FieldTypes.Datetime" />
+                        <MudSelectItem T="FieldTypes" Value="FieldTypes.Text"/>
+                    </MudSelect>
+                </MudStack>
+            }
+            <MudStack Row="true" Class="ma-auto pt-8">
+                <MudText Class="gap-4 ma-auto" Typo="Typo.body1" Align="Align.Center">Ghi chú:</MudText>
+                <MudTextField Class="pb-3" T="string" @bind-Value="_template.Description"></MudTextField>
+            </MudStack>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick=@TestSubmit>
+                Tạo mẫu đơn
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudPaper>
+
+
+@code {
+
+    private int lastTotalFields = 1;
+    private int totalFields = 1;
+    private LetterTemplate _template = new LetterTemplate();
+
+    private class RenderField
+    {
+        public int RenderId { get; set; }
+        public TemplateAdditionalField TemplateField { get; set; } = new TemplateAdditionalField();
+    }
+    private List<RenderField> _fieldsList = new List<RenderField>()
+    {
+        new RenderField()
+        {
+            RenderId = 1,
+        }
+    };
+
+    protected override void OnInitialized()
+    {
+        UserState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
+    }
+
+    private void OnTotalFieldsChange(int totalFields)
+    {
+        this.totalFields = totalFields;
+        var changes = totalFields - lastTotalFields;
+        AddOrRemoveFieldList(changes);
+        lastTotalFields = totalFields;
+        StateHasChanged();
+    }
+
+    private void AddOrRemoveFieldList(int changes)
+    {
+        if (changes > 0)
+        {
+            for (var i = 0; i < changes; i++)
+            {
+                var templateField = new TemplateAdditionalField();
+                _fieldsList.Add(new RenderField()
+                {
+                    RenderId = lastTotalFields + i + 1,
+                    TemplateField = templateField
+                });
+            }
+        }
+        else
+        {
+            _fieldsList.RemoveRange(_fieldsList.Count - 1 + changes, -changes);
+        }
+        Console.WriteLine($@"FieldListCount {_fieldsList.Count}, changes: {changes}");
+
+    }
+
+    private void TestSubmit()
+    {
+        Console.WriteLine(_fieldsList[0].TemplateField);
+    }
+    // private async Task _submitLetter()
+    // {
+    //     try
+    //     {
+    //         var createLetterDto = new CreateLetterDto()
+    //         {
+    //             StudentId = this.Letter!.Student!.StudentId,
+    //             LetterTemplateId = _template!.Id.ToString(),
+    //             LetterAdditionalFields = this.Letter!.LetterAdditionalFields
+    //         };
+    //         var result = await HttpClient.PostAsJsonAsync("/api/letters", createLetterDto);
+    //
+    //         if (result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    // // await DialogService.ShowMessageBox("error", "Chưa thể gửi đơn do có lỗi hệ thống, thử lại sau");
+    // // StateHasChanged();
+    //     }
+    // }
+}
