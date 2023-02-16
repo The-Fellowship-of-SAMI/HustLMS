@@ -15,7 +15,7 @@ namespace LetterManagement.Server
                 {
                     new()
                     {   Id = new Guid(),
-                        Name = "Phòng đào tạo",
+                        Name = "Phòng đào tạo tầng 1",
                         ShortName="PDT"
 
                     },
@@ -23,6 +23,12 @@ namespace LetterManagement.Server
                     {   Id = new Guid(),
                         Name = "Viện toán ứng dụng và tin học",
                         ShortName="SAMI"
+                    },
+                    new()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Phòng đào tạo tầng 2",
+                        ShortName = "PDT"
                     }
                 };
                 var managerId1 = Guid.NewGuid();
@@ -115,7 +121,7 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = new Guid(),
-                        Department = departments.Single(x=>x.ShortName == "PDT"),
+                        Departments = departments.Where(x=>x.ShortName == "PDT").ToList(),
                         Name = "Đơn xin nghỉ học dài hạn",
                         Receiver = @"BAN GIÁM HIỆU ĐẠI HỌC BÁCH KHOA HÀ NỘI, PHÒNG ĐÀO TẠO ĐẠI HỌC",
                         Description = "Sinh viên sẽ nhận Quyết định nghỉ học dài hạn tại Phòng Công tác chính trị & Công tác SV. Thời gian nhập học trở lại là trong vòng 4 tuần trước khi bắt đầu mỗi học kỳ để SV đủ thời gian đăng ký học tập.",
@@ -192,7 +198,7 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = new Guid(),
-                        Department = departments.Single(x=>x.ShortName=="PDT"),
+                        Departments = departments.Where(x=>x.ShortName=="PDT").ToList(),
                         Name = "ĐƠN XIN TIẾP NHẬN TRỞ LẠI HỌC",
                         Receiver = @"HIỆU TRƯỞNG TRƯỜNG ĐHBK HÀ NỘI, TRƯỞNG PHÒNG ĐÀO TẠO ĐẠI HỌC",
                         AdditionalFields = new List<TemplateAdditionalField>
@@ -260,7 +266,11 @@ namespace LetterManagement.Server
                         Id = default,
                         Template = letterTemplates[0],
                         Student = students.SingleOrDefault((x=>x.StudentId==20195902)),
-                        Manager = managers[1],
+                        Managers = new List<Manager>()
+                        {
+                            managers[1],
+                            managers[0]
+                        },
                         NoteToStudent = null,
                         ReceivedDate = null,
                         FinishedDate = null,
@@ -273,7 +283,11 @@ namespace LetterManagement.Server
                         Id = default,
                         Template = letterTemplates[0],
                         Student = students.SingleOrDefault(x=>x.StudentId==20195859),
-                        Manager = managers[1],
+                        Managers = new List<Manager>()
+                        {
+                            managers[1],
+                            managers[0]
+                        },
                         NoteToStudent = null,
                         ReceivedDate = DateTime.Today.AddDays(1),
                         FinishedDate = null,
@@ -299,7 +313,10 @@ namespace LetterManagement.Server
                         Id = default,
                         Template = letterTemplates[0],
                         Student = students.SingleOrDefault(x=>x.StudentId==20195859),
-                        Manager = managers[1],
+                        Managers = new List<Manager>()
+                        {
+                            managers[0]
+                        },
                         NoteToStudent = null,
                         ReceivedDate = DateTime.Today.AddDays(1),
                         FinishedDate = DateTime.Today.AddDays(3),

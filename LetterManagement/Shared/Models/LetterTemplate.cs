@@ -5,7 +5,7 @@
         public Guid Id { get; set; }
         public string? Name { get; set; }
 
-        public Department? Department { get; set; }
+        public List<Department> Departments { get; set; } = new List<Department>();
         public string? Receiver { get; set; }
 
         public string? Description { get; set; }
@@ -24,7 +24,7 @@
 
         public string? FieldName { get; set; } = "";
 
-        public FieldTypes? FieldType { get; set; } = null;
+        public FieldTypes FieldType { get; set; } = FieldTypes.Text;
 
         public string? AdditionalText { get; set; } = null;
 

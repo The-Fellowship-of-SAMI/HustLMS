@@ -20,7 +20,10 @@ else
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardContent>
-                                    <MudText>Đơn vị: @template.Department?.Name</MudText>
+                                    @foreach (var department in template.Departments)
+                                    {
+                                        <MudText>Đơn vị: @department.Name</MudText>
+                                    }
                                     <MudText GutterBottom="@true">Phiên bản: @template.ModifiedAt.ToString("dd.MM.yyyy")</MudText>
                                 </MudCardContent>
                                 <MudCardActions Class="mb-0">

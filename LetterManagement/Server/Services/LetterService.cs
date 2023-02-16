@@ -21,11 +21,11 @@ public class LetterService : ILetterService
         return await this._context.Letters.
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Student).
+            Include(x=>x.Managers).
+            Include(x=>x.LetterAdditionalFields).
             Include(x=>x.Template).
-            ThenInclude(x=>x.AdditionalFields).
+            ThenInclude(x=>x!.Departments).
             AsSplitQuery().
-            Include(x=>x.Manager).
-            ThenInclude(x=>x.Department).
             ToListAsync();
     }
 
@@ -69,7 +69,7 @@ public class LetterService : ILetterService
         return true;
     }
 
-    public async Task<Letter> update(Guid id, Letter tNew)
+    public Task<Letter> update(Guid id, Letter tNew)
     {
         throw new NotImplementedException();
     }
@@ -83,18 +83,23 @@ public class LetterService : ILetterService
 
     public async Task<string> GetState(Letter letter)
     {
-        var let = await this._context.Letters.Include(x => x.State).SingleOrDefaultAsync(x => x.Id == letter.Id);
+        var let = await this._context.Letters.
+            Include(x => x.State).
+            SingleOrDefaultAsync(x => x.Id == letter.Id);
+        if (let is null)
+            return "Không rõ";
         return let.State;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLettersByStudentId(int studentId)
     {
         var letters = await this._context.Letters.
-            Where(x => x.Student.StudentId == studentId).
+            Where(x => x.Student!.StudentId == studentId).
             Include(x => x.LetterAdditionalFields).
-            Include(x=>x.Manager).
+            Include(x=>x.Managers).
             Include(x=>x.Template).
-            Include(x => x.Manager.Department).
+            ThenInclude(x=>x!.Departments).
+            Include(x => x.Managers).
             AsSplitQuery().
             ToListAsync();
         return letters;
@@ -102,26 +107,34 @@ public class LetterService : ILetterService
 
     public async Task<IEnumerable<Letter>> GetAllLettersByManagerId(Guid managerId)
     {
+        var manager = await this._context.Manager.SingleOrDefaultAsync(x => x.Id == managerId);
+        if (manager is null) return new List<Letter>();
         var letters = await this._context.Letters.
-            Where(x => x.Manager.Id == managerId).
+            Where(x => x.Managers.Contains(manager)).
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Student).
+            ThenInclude(x=>x!.School).
             Include(x=>x.Template).
+            ThenInclude(x=>x!.Departments).
             AsSplitQuery().
-            Include(x=>x.Student.School).
-            Include(x => x.Manager.Department).
             ToListAsync();
         return letters;
     }
 
     public async Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(Guid departmentId)
     {
+        var department = await this._context.Departments.SingleOrDefaultAsync(x => x.Id == departmentId);
+        if (department is null)
+        {
+            return new List<Letter>();
+        }
         var letters = await this._context.Letters.
-            Where(x => x.Template.Department.Id == departmentId).
+            Where(x => x.Template!.Departments.Contains(department)).
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Student).
-            Include(x=>x.Manager).
+            ThenInclude(x=>x!.School).
             Include(x=>x.Template).
+            ThenInclude(x=>x!.Departments).
             AsSplitQuery().
             ToListAsync();
         return letters;    
@@ -131,16 +144,15 @@ public class LetterService : ILetterService
     {
         var letter = await this._context.Letters.
             Include(x => x.LetterAdditionalFields).
-            AsSplitQuery().
             Include(x=>x.Student).
-            Include(x => x.Manager).
-            Include(x => x.Template).
+            ThenInclude(x=>x!.School).
+            Include(x=>x.Template).
+            ThenInclude(x=>x!.Departments).
+            Include(x=>x.Template!.AdditionalFields).
             AsSplitQuery().
-            Include(x => x.Student.School).
-            AsSplitQuery().Include(x=>x.Template.AdditionalFields).
             SingleOrDefaultAsync(x => x.Id == letterId);
         if (letter is not null) return letter;
-        return null;
+        return new Letter();
     }
 
     public async Task<bool> UpdateLetterState(LetterStateDto letterStateDto)

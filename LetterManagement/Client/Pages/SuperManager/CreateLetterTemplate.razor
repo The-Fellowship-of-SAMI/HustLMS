@@ -59,7 +59,6 @@
                     Min="1"
                     Max="20"
                     Required="true"
-                    Value="1"
                     ValueChanged="i => OnTotalFieldsChange(i)">
                 </MudNumericField>
             </MudStack>
@@ -67,17 +66,44 @@
             {
                 var label = "Mục " + i + ": ";
                 var fieldListElement = _fieldsList[i-1];
-                <MudStack Row="true" Style="ma-auto">
+                <MudStack Row="true">
                     <MudTextField
                         T="string"
                         Label=@label
                         @bind-Value=@fieldListElement.TemplateField.FieldName
                         >
                     </MudTextField>
-                    <MudSelect T="FieldTypes" Label="Kiểu dữ liệu" AnchorOrigin="Origin.BottomCenter" >
-                        <MudSelectItem T="FieldTypes" Value="FieldTypes.Datetime" />
-                        <MudSelectItem T="FieldTypes" Value="FieldTypes.Text"/>
+                    <MudSelect T="FieldTypes" Label="Kiểu dữ liệu" 
+                               AnchorOrigin="Origin.BottomCenter" 
+                               @bind-Value="@fieldListElement.TemplateField.FieldType" >
+                        <MudSelectItem T="FieldTypes" Value=@FieldTypes.Text />
+                        <MudSelectItem T="FieldTypes" Value=@FieldTypes.Datetime/>
+                        <MudSelectItem T="FieldTypes" Value="@FieldTypes.Checkbox"/>
                     </MudSelect>
+                    @if (fieldListElement.TemplateField.FieldType == FieldTypes.Checkbox)
+                    {
+                        <MudSelect T="IEnumerable<int>" Label="Chọn các field cùng nhóm" 
+                                   MultiSelection="true"
+                                   bind-SelectedValues="fieldListElement.FieldsInGroup"
+                                   bin
+                                   >
+                            @foreach (var field in _fieldsList)
+                            {
+                                <MudSelectItem T="int" Value="field.RenderId">
+                                    
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    }
+                    @if (fieldListElement.FieldsInGroup.Count > 0)
+                    {
+                        foreach (var field in fieldListElement.FieldsInGroup)
+                        {
+                            Console.WriteLine(field);
+                            _fieldsList[field].TemplateField.GroupFieldId =
+                                fieldListElement.TemplateField.Id;
+                        }
+                    }
                 </MudStack>
             }
             <MudStack Row="true" Class="ma-auto pt-8">
@@ -104,6 +130,7 @@
     {
         public int RenderId { get; set; }
         public TemplateAdditionalField TemplateField { get; set; } = new TemplateAdditionalField();
+        public List<int> FieldsInGroup { get; set; } = new List<int>();
     }
     private List<RenderField> _fieldsList = new List<RenderField>()
     {
@@ -153,10 +180,14 @@
         Console.WriteLine($@"FieldListCount {_fieldsList.Count}, changes: {changes}");
 
     }
-
+    
     private void TestSubmit()
     {
-        Console.WriteLine(_fieldsList[0].TemplateField);
+        foreach (var field in _fieldsList)
+        {
+            Console.WriteLine(field.TemplateField);
+
+        }
     }
     // private async Task _submitLetter()
     // {

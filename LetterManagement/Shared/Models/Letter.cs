@@ -9,7 +9,7 @@ namespace LetterManagement.Shared.Models
 
         public Student? Student { get; set; }
 
-        public Manager? Manager { get; set; }
+        public List<Manager> Managers { get; set; } = new List<Manager>();
 
         public string? NoteToStudent { get; set; }
         public DateTime? ReceivedDate { get; set; } = null;
@@ -17,14 +17,20 @@ namespace LetterManagement.Shared.Models
         public DateTime? FinishedDate { get; set; } = null;
 
         public string State {
-            get {
-                if(ReceivedDate is not null)
-                    return "Đã nhận";
-
-                if (FinishedDate is not null)
+            get
+            {
+                if (FinishedDate.HasValue)
+                {
                     return "Hoàn thành";
-                else return "Đã gửi";
-                } 
+                }
+
+                if (ReceivedDate.HasValue)
+                {
+                    return "Đã nhận";
+                }
+
+                return "Đã gửi";
+            } 
         }
 
         public List<LetterAdditionalField> LetterAdditionalFields { get; set; } = new List<LetterAdditionalField>();

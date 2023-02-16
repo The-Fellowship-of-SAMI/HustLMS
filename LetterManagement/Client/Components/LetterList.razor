@@ -24,19 +24,31 @@ else
                             {
                                 <MudText>Sinh viên:@letter.Student.Name. MSSV: @letter.Student.StudentId. Khóa: @letter.Student.SchoolYear</MudText>
                             }
-                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                <MudText>Đơn vị: @letter?.Template?.Department.Name</MudText>
-                                @if(letter.Manager is not null)
+                            <MudText>Đơn vị:</MudText>
+                            <MudStack AlignItems="AlignItems.Stretch">
+                                @foreach (var department in letter.Template.Departments)
                                 {
-                                    <MudText Align="Align.Right">Người phụ trách: @letter?.Manager?.Name</MudText>
+                                    <MudText>@department.Name</MudText>
+                                }
+                                @if(letter.Managers is not null)
+                                {
+                                    @foreach (var manager in letter.Managers)
+                                    {
+                                        <MudText Align="Align.Right">Người phụ trách: @manager.Name</MudText>
+                                    }
                                 }
                             </MudStack>
                             <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                            <MudText GutterBottom="true" Class="pb-3">Trạng thái: @letter.State</MudText>
+
                             <MudText GutterBottom="true">Ngày gửi: @letter.CreatedAt.ToString("dd/MM/yyyy")</MudText>
-                            <MudText GutterBottom="true">Trạng thái: @letter.State</MudText>
-                            @if (letter.FinishedDate is not null)
+                            @if (letter.ReceivedDate.HasValue)
                             {
-                                <MudText GutterBottom="true"> Hoàn thành: @letter.FinishedDate?.ToString("dd/MM/yyyy")</MudText>
+                                <MudText GutterBottom="true">Ngày nhận: @letter.ReceivedDate.Value.ToString("dd/MM/yyyy")</MudText>
+                            }
+                            @if (letter.FinishedDate.HasValue)
+                            {
+                                <MudText GutterBottom="true"> Hoàn thành: @letter.FinishedDate.Value.ToString("dd/MM/yyyy")</MudText>
                             }
                         </MudCardContent>
                         <MudCardActions>

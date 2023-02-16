@@ -18,7 +18,7 @@ namespace LetterManagement.Server.Services
         {
             return await this._context.LetterTemplates.
                 Include(x=>x.AdditionalFields).
-                Include(x=>x.Department).
+                Include(x=>x.Departments).
                 Include(x => x.ConfirmationsTemplate).
                 AsSplitQuery().
                 ToListAsync();
@@ -30,7 +30,7 @@ namespace LetterManagement.Server.Services
 
             var letterTemplate = await this._context.LetterTemplates.
                 Include(x=>x.AdditionalFields).
-                Include(x=>x.Department).
+                Include(x=>x.Departments).
                 Include(x=>x.ConfirmationsTemplate).
                 AsSplitQuery().
                 SingleOrDefaultAsync(x => x.Id == letterId);

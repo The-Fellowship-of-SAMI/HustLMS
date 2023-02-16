@@ -127,6 +127,9 @@ namespace LetterManagement.Server.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("LetterTemplateId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("TEXT");
 
@@ -139,6 +142,8 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LetterTemplateId");
 
                     b.ToTable("Departments");
                 });
@@ -153,9 +158,6 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("FinishedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("ManagerId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -174,8 +176,6 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagerId");
 
                     b.HasIndex("StudentId");
 
@@ -221,9 +221,6 @@ namespace LetterManagement.Server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("DepartmentId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -240,8 +237,6 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.ToTable("LetterTemplates");
                 });
@@ -264,6 +259,9 @@ namespace LetterManagement.Server.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("LetterId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -275,6 +273,8 @@ namespace LetterManagement.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("LetterId");
 
                     b.ToTable("Manager");
                 });
@@ -518,12 +518,15 @@ namespace LetterManagement.Server.Migrations
                         .HasForeignKey("LetterTemplateId");
                 });
 
+            modelBuilder.Entity("LetterManagement.Shared.Models.Department", b =>
+                {
+                    b.HasOne("LetterManagement.Shared.Models.LetterTemplate", null)
+                        .WithMany("Departments")
+                        .HasForeignKey("LetterTemplateId");
+                });
+
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
                 {
-                    b.HasOne("LetterManagement.Shared.Models.Manager", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId");
-
                     b.HasOne("LetterManagement.Shared.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId");
@@ -531,8 +534,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasOne("LetterManagement.Shared.Models.LetterTemplate", "Template")
                         .WithMany()
                         .HasForeignKey("TemplateId");
-
-                    b.Navigation("Manager");
 
                     b.Navigation("Student");
 
@@ -546,20 +547,15 @@ namespace LetterManagement.Server.Migrations
                         .HasForeignKey("LetterId");
                 });
 
-            modelBuilder.Entity("LetterManagement.Shared.Models.LetterTemplate", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
-                    b.Navigation("Department");
-                });
-
             modelBuilder.Entity("LetterManagement.Shared.Models.Manager", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId");
+
+                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
+                        .WithMany("Managers")
+                        .HasForeignKey("LetterId");
 
                     b.Navigation("Department");
                 });
@@ -651,6 +647,8 @@ namespace LetterManagement.Server.Migrations
                     b.Navigation("Confirmations");
 
                     b.Navigation("LetterAdditionalFields");
+
+                    b.Navigation("Managers");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.LetterTemplate", b =>
@@ -658,6 +656,8 @@ namespace LetterManagement.Server.Migrations
                     b.Navigation("AdditionalFields");
 
                     b.Navigation("ConfirmationsTemplate");
+
+                    b.Navigation("Departments");
                 });
 #pragma warning restore 612, 618
         }

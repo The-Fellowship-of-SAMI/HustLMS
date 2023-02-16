@@ -32,11 +32,14 @@ namespace LetterManagement.Server.Controllers
 
 
         [HttpGet("manager/{managerId}")]
-        public Task<IEnumerable<Letter>> GetAllLettersByManagerId(string managerId)
+        public async Task<IEnumerable<Letter>> GetAllLettersByManagerId(string managerId)
         {
-            return this._letterService.GetAllLettersByManagerId(new Guid(managerId));
-        }
+            var letters = await this._letterService.GetAllLettersByManagerId(new Guid(managerId));
 
+            // SortTools
+            // SortTools.SortList(sortQueryString, letters.ToList());
+            return letters;
+        }
 
         [HttpGet("department/{departmentId}")]
         public Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(string departmentId)
