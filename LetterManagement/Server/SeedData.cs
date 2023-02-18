@@ -324,7 +324,8 @@ namespace LetterManagement.Server
                     }
                 };
 
-
+                departments[0].LetterTemplates.Add(letterTemplates[0]);
+                departments[2].LetterTemplates.Add(letterTemplates[0]);
                 await context.Students.AddRangeAsync(students);
                 await context.Departments.AddRangeAsync(departments);
                 await context.Manager.AddRangeAsync(managers);

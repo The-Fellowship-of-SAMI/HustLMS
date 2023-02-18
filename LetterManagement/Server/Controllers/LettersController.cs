@@ -19,9 +19,18 @@ namespace LetterManagement.Server.Controllers
         
 
         [HttpGet("{letterId}")]
-        public Task<Letter> GetLetter(string letterId)
+        public async Task<ActionResult<Letter>> GetLetter(string letterId)
         {
-            return this._letterService.GetLetter(new Guid(letterId));
+            try
+            {
+                var letterGuid = Guid.Parse(letterId);
+                var letter = await this._letterService.GetLetter(letterGuid);
+                return Ok(letter);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("LetterId is incorrect" + letterId);
+            }
         }
 
         [HttpGet("student/{studentId}")]
@@ -32,19 +41,37 @@ namespace LetterManagement.Server.Controllers
 
 
         [HttpGet("manager/{managerId}")]
-        public async Task<IEnumerable<Letter>> GetAllLettersByManagerId(string managerId)
+        public async Task<ActionResult<IEnumerable<Letter>>> GetAllLettersByManagerId(string managerId)
         {
-            var letters = await this._letterService.GetAllLettersByManagerId(new Guid(managerId));
+            try
+            {
+                var managerGuid = Guid.Parse(managerId);
+                var letters = await this._letterService.GetAllLettersByManagerId(new Guid(managerId));
 
-            // SortTools
-            // SortTools.SortList(sortQueryString, letters.ToList());
-            return letters;
+                // SortTools
+                // SortTools.SortList(sortQueryString, letters.ToList());
+                return Ok(letters);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("ManagerId is incorrect");
+            }
+
         }
 
         [HttpGet("department/{departmentId}")]
-        public Task<IEnumerable<Letter>> GetAllLettersByDepartmentId(string departmentId)
+        public async Task<ActionResult<IEnumerable<Letter>>> GetAllLettersByDepartmentId(string departmentId)
         {
-            return this._letterService.GetAllLettersByDepartmentId(new Guid(departmentId));
+            try
+            {
+                var departmentGuid = Guid.Parse(departmentId);
+                var result = await this._letterService.GetAllLettersByDepartmentId(departmentGuid);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("DepartmentId is incorrect");
+            }
         }
 
         [HttpPost]

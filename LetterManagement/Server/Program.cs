@@ -1,4 +1,5 @@
-﻿using LetterManagement.Server;
+﻿using System.Text.Json.Serialization;
+using LetterManagement.Server;
 using LetterManagement.Server.Extensions;
 using LetterManagement.Server.Models;
 using LetterManagement.Server.Repositories;
@@ -12,7 +13,8 @@ StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configurat
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddRazorPages();
 
 builder.Services.AddApplicationServices(builder.Configuration);

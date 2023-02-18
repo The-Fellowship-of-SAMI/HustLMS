@@ -1,4 +1,5 @@
 ﻿using LetterManagement.Server.Services;
+using LetterManagement.Shared.Dtos;
 using LetterManagement.Shared.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -33,9 +34,9 @@ namespace LetterManagement.Server.Controllers
 
         // POST api/<LetterTemplatesController>
         [HttpPost]
-        public async void Post([FromBody] LetterTemplate template)
+        public async void Post([FromBody] CreateLetterTemplateDto template)
         {
-             await this._letterTemplateService.Create(template);
+             await this._letterTemplateService.CreateLetterTemplate(template);
         }
 
         // PUT api/<LetterTemplatesController>/5

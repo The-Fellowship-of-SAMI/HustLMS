@@ -3,6 +3,7 @@
 @using LetterManagement.Client.Components;
 @using LetterManagement.Client.StateContainer
 @using LetterManagement.Server.Dtos
+@using LetterManagement.Shared.Dtos
 
 @inject UserState UserState;
 @inject HttpClient HttpClient;
@@ -20,7 +21,7 @@
             
             <MudStack Row="true" Class="ma-auto">
                 <MudText Class="gap-4 ma-auto" Typo="Typo.h6" Align="Align.Center">Đơn vị phụ trách</MudText>
-                <DepartmentSelect Departments="departments" @bind-SelectedDepartments="_template.Departments" />
+                <DepartmentSelect Departments="departments" @bind-SelectedDepartments="selectedDepartment" />
             </MudStack>
             <MudStack Row="true" Class="ma-auto">
                 <MudText Class="gap-4 ma-auto" Typo="Typo.h6" Align="Align.Center">Kính gửi:</MudText>
@@ -129,9 +130,9 @@
     private int lastTotalFields = 1;
     private int totalFields = 1;
 
-    private LetterTemplate _template = new LetterTemplate();
+    private CreateLetterTemplateDto _template = new CreateLetterTemplateDto();
     private List<Department> departments = new List<Department>();
-
+    private List<Department> selectedDepartment = new List<Department>();
     private class RenderField
     {
         public int RenderId { get; set; }
@@ -214,8 +215,8 @@
             }
             _template.AdditionalFields.Add(field.TemplateField);
         }
-        
-
+        _template.DepartmentIds = selectedDepartment.Select(x => x.Id.ToString()).ToList();
+        _template.Name = _template.Name.ToUpper();
     }
 
     private async Task _getDepartments()
@@ -230,6 +231,7 @@
         {
             var result = await HttpClient.PostAsJsonAsync("/api/letterTemplates", _template);
             Console.WriteLine("Response Result", result.StatusCode);
+            NavigationManager.NavigateTo("/templateList");
         }
         catch (Exception e)
         {
