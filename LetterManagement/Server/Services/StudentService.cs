@@ -17,13 +17,13 @@ public class StudentService : IStudentService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<StudentDto>> getAll()
+    public async Task<IEnumerable<StudentDto>> GetAll()
     {
         var students = await _context.Students.ToListAsync();
         return _mapper.Map<IEnumerable<StudentDto>>(students);
     }
 
-    public async Task<StudentDto> create(StudentDto t)
+    public async Task<StudentDto> Create(StudentDto t)
     {
         var student = _mapper.Map<Student>(t);
         await _context.Students.AddAsync(student);
@@ -32,7 +32,7 @@ public class StudentService : IStudentService
         return t;
     }
 
-    public async Task<StudentDto> update(Guid id, StudentDto studentDto)
+    public async Task<StudentDto> Update(Guid id, StudentDto studentDto)
     {
         var inDatabaseStudent = await _context.Students.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -45,7 +45,7 @@ public class StudentService : IStudentService
         return studentDto;
     }
 
-    public Task<StudentDto> delete(StudentDto t)
+    public Task<StudentDto> Delete(StudentDto t)
     {
         throw new NotImplementedException();
     }

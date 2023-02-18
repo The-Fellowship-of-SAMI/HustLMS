@@ -1,0 +1,38 @@
+﻿@using LetterManagement.Shared.Models
+<MudSelect T="string" Label="Chọn đơn vị"
+           MultiSelection="true"
+           @bind-Value="SelectedDepartmentsString" OnClose="OnSelectedDepartmentsChange">
+    @if (Departments?.Count > 0)
+    {
+        @foreach (var department in Departments)
+        {
+            <MudSelectItem T="string" Value="department.Name"/>
+        }
+        if (SelectedDepartmentsString.Length>0)
+        {
+            var selectedNames = SelectedDepartmentsString.Split(",");
+            SelectedDepartments = Departments.Where(x => selectedNames.Contains(x.Name)).ToList();
+
+        }
+    }
+
+</MudSelect>
+@code {
+
+    [Parameter]
+    public List<Department>? Departments { get; set; }
+
+    private string SelectedDepartmentsString { get; set; } = "";
+
+    [Parameter]
+    public List<Department> SelectedDepartments { get; set; } = new List<Department>();
+
+    [Parameter]
+    public EventCallback<List<Department>> SelectedDepartmentsChanged { get; set; }
+
+    private Task OnSelectedDepartmentsChange()
+    {
+
+        return SelectedDepartmentsChanged.InvokeAsync(SelectedDepartments);
+    }
+}

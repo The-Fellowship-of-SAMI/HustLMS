@@ -16,7 +16,7 @@ public class LetterService : ILetterService
         _context = context;
     }
 
-    public async Task<IEnumerable<Letter>> getAll()
+    public async Task<IEnumerable<Letter>> GetAll()
     {
         return await this._context.Letters.
             Include(x => x.LetterAdditionalFields).
@@ -29,7 +29,7 @@ public class LetterService : ILetterService
             ToListAsync();
     }
 
-    public async Task<Letter> create(Letter letter)
+    public async Task<Letter> Create(Letter letter)
     {
         // Validate
 
@@ -69,12 +69,12 @@ public class LetterService : ILetterService
         return true;
     }
 
-    public Task<Letter> update(Guid id, Letter tNew)
+    public Task<Letter> Update(Guid id, Letter tNew)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Letter> delete(Letter t)
+    public async Task<Letter> Delete(Letter t)
     {
         this._context.Letters.Remove(t);
         await this._context.SaveChangesAsync();

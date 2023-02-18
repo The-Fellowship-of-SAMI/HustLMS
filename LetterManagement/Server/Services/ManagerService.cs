@@ -13,22 +13,22 @@ public class ManagerService : IManagerService
         _context = context;
     }
 
-    public async Task<IEnumerable<Manager>> getAll()
+    public async Task<IEnumerable<Manager>> GetAll()
     {
         return null;
     }
 
-    public async Task<Manager> create(Manager tDto)
+    public async Task<Manager> Create(Manager tDto)
     {
         return null;
     }
 
-    public async Task<Manager> update(Guid id, Manager tNew)
+    public async Task<Manager> Update(Guid id, Manager tNew)
     {
         return null;
     }
 
-    public async Task<Manager> delete(Manager t)
+    public async Task<Manager> Delete(Manager t)
     {
         return null;
     }

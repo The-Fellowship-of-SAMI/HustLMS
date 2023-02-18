@@ -20,7 +20,7 @@ namespace LetterManagement.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StudentDto>>> GetAll()
         {
-            return  Ok(await this._studentService.getAll());
+            return  Ok(await this._studentService.GetAll());
         }
         
         [HttpGet("{id}")]

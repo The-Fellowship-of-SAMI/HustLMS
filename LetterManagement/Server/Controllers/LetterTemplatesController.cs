@@ -21,7 +21,7 @@ namespace LetterManagement.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<LetterTemplate>> Get()
         {
-            return await this._letterTemplateService.getAll();
+            return await this._letterTemplateService.GetAll();
         }
 
         // GET api/<LetterTemplatesController>/5
@@ -33,8 +33,9 @@ namespace LetterManagement.Server.Controllers
 
         // POST api/<LetterTemplatesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async void Post([FromBody] LetterTemplate template)
         {
+             await this._letterTemplateService.Create(template);
         }
 
         // PUT api/<LetterTemplatesController>/5

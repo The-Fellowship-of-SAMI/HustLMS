@@ -2,11 +2,11 @@
 
 public interface ICrud<TDto>
 {
-    Task<IEnumerable<TDto>> getAll();
+    Task<IEnumerable<TDto>> GetAll();
 
-    Task<TDto> create(TDto tDto);
+    Task<TDto> Create(TDto tDto);
 
-    Task<TDto> update(Guid id, TDto tNew);
+    Task<TDto> Update(Guid id, TDto tNew);
 
-    Task<TDto> delete(TDto t);
+    Task<TDto> Delete(TDto t);
 }

@@ -14,7 +14,7 @@ namespace LetterManagement.Server.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<LetterTemplate>> getAll()
+        public async Task<IEnumerable<LetterTemplate>> GetAll()
         {
             return await this._context.LetterTemplates.
                 Include(x=>x.AdditionalFields).
@@ -37,7 +37,7 @@ namespace LetterManagement.Server.Services
             if (letterTemplate is not null) return letterTemplate;
             return emptyLetterTemplate;
         }
-        public async Task<LetterTemplate> create(LetterTemplate letterTemplate)
+        public async Task<LetterTemplate> Create(LetterTemplate letterTemplate)
         {
             await this._context.LetterTemplates.AddAsync(letterTemplate);
             var result = await this._context.SaveChangesAsync() > 0;
@@ -47,7 +47,7 @@ namespace LetterManagement.Server.Services
             return letterTemplate;
         }
 
-        public async Task<LetterTemplate> update(Guid id, LetterTemplate letterTemplate)
+        public async Task<LetterTemplate> Update(Guid id, LetterTemplate letterTemplate)
         {
 
             this._context.LetterTemplates.Update(letterTemplate);
@@ -55,7 +55,7 @@ namespace LetterManagement.Server.Services
             return letterTemplate;
         }
 
-        public async Task<LetterTemplate> delete(LetterTemplate t)
+        public async Task<LetterTemplate> Delete(LetterTemplate t)
         {
             throw new NotImplementedException();
         }
