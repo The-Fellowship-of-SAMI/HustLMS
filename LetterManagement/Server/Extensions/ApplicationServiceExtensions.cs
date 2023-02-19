@@ -21,6 +21,7 @@ namespace LetterManagement.Server.Extensions
             services.AddScoped<ILetterService, LetterService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<INotificationService, NotificationService>();
             return services;
         }
     }

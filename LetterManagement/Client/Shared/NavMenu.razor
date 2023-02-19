@@ -12,7 +12,11 @@
     {
         <MudNavLink Href="managerLetterList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Send">Đơn đảm nhận</MudNavLink>
     }
-    <MudNavLink Href="createLetterTemplate" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Create">Tạo mẫu đơn</MudNavLink>
+    @if (UserState.Role == Roles.Manager || UserState.Role == Roles.SuperManager)
+    {
+        <MudNavLink Href="createLetterTemplate" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Create">Tạo mẫu đơn</MudNavLink>
+
+    }
 
 </MudNavMenu>
 

@@ -10,7 +10,7 @@ namespace LetterManagement.Client.StateContainer
 
         public string? Email { get; set; }
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = "";
         public Roles Role { get; set; } 
 
         public Student? Student { get; set; }

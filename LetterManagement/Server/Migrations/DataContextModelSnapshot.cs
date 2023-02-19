@@ -102,6 +102,33 @@ namespace LetterManagement.Server.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("LetterManagement.Server.Models.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("LetterManagement.Shared.Models.ConfirmationTemplate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -287,36 +314,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasIndex("LetterId");
 
                     b.ToTable("Manager");
-                });
-
-            modelBuilder.Entity("LetterManagement.Shared.Models.Notification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Student", b =>
@@ -566,6 +563,13 @@ namespace LetterManagement.Server.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LetterManagement.Server.Models.Notification", b =>
+                {
+                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
+                        .WithMany("Notifications")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("LetterManagement.Shared.Models.ConfirmationTemplate", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.LetterTemplate", null)
@@ -606,13 +610,6 @@ namespace LetterManagement.Server.Migrations
                         .HasForeignKey("LetterId");
 
                     b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("LetterManagement.Shared.Models.Notification", b =>
-                {
-                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
-                        .WithMany("Notifications")
-                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Student", b =>

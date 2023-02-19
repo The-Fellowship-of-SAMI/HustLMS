@@ -1,50 +1,101 @@
 ﻿@using LetterManagement.Client.StateContainer
+@using LetterManagement.Shared.Dtos
 
 @inject UserState UserState;
+@inject HttpClient HttpClient;
 
 @page "/"
 
 <PageTitle> Thông tin sinh viên</PageTitle>
 
+<MudPaper MaxWidth="60%" MaxHeight="70%" Class="ma-auto" Elevation="0">
+    <MudStack Row="true">
 
-<MudPaper Class="pa-5 ma-auto rounded" MaxWidth="60%" Elevation="3">
-    @if (UserState.Student is not null)
-    {
-        <MudStack Class="pa-1">
-            <MudText Typo="Typo.h6" Class="ma-auto">Thông tin sinh viên</MudText>
-            <MudText>Tên sinh viên: @UserState.Student.Name</MudText>
-            <MudText>Mã số sinh viên: @UserState.Student.StudentId</MudText>
-            <MudText>Khóa: @UserState.Student.SchoolYear</MudText>
-            <MudText>Viện quản lý: @UserState.Student.School.Name</MudText>
-            <MudText>Số điện thoại: @UserState.Student.PhoneNumber</MudText>
-            <MudText>Email: @UserState.Student.Email</MudText>
-            <MudText>Ngày tháng năm sinh: @UserState.Student.DateOfBirth.ToShortDateString()</MudText>
+        <MudPaper Class="pa-5 ma-auto rounded overflow-y-scroll" Height="500px" Elevation="3">
+            @if (UserState.Student is not null)
+            {
+                <MudStack Class="pa-1">
+                    <MudText Typo="Typo.h6" Class="ma-auto">Thông tin sinh viên</MudText>
+                    <MudText>Tên sinh viên: @UserState.Student.Name</MudText>
+                    <MudText>Mã số sinh viên: @UserState.Student.StudentId</MudText>
+                    <MudText>Khóa: @UserState.Student.SchoolYear</MudText>
+                    <MudText>Viện quản lý: @UserState.Student.School.Name</MudText>
+                    <MudText>Số điện thoại: @UserState.Student.PhoneNumber</MudText>
+                    <MudText>Email: @UserState.Student.Email</MudText>
+                    <MudText>Ngày tháng năm sinh: @UserState.Student.DateOfBirth.ToShortDateString()</MudText>
+                    <MudText>UserId:@UserState.UserId</MudText>
 
-        </MudStack>
-    }
-    @if (UserState.Manager is not null)
-    {
-        <MudStack Class="pa-1">
-            <MudText Typo="Typo.h6" Class="ma-auto">Thông tin</MudText>
-            <MudText>Tên sinh viên: @UserState.Manager.Name</MudText>
-            <MudText>Viện công tác: @UserState.Manager.Department?.Name</MudText>
-            <MudText>Số điện thoại: @UserState.Manager.PhoneNumber</MudText>
-            <MudText>Email: @UserState.Manager.Email</MudText>
-            <MudText>Ngày tháng năm sinh: @UserState.Manager.DateOfBirth.ToShortDateString()</MudText>
-
-        </MudStack>
-    }
+                </MudStack>
+            }
+            @if (UserState.Manager is not null)
+            {
+                <MudStack Class="pa-1">
+                    <MudText Typo="Typo.h6" Class="ma-auto">Thông tin</MudText>
+                    <MudText>Tên sinh viên: @UserState.Manager.Name</MudText>
+                    <MudText>Viện công tác: @UserState.Manager.Department?.Name</MudText>
+                    <MudText>Số điện thoại: @UserState.Manager.PhoneNumber</MudText>
+                    <MudText>Email: @UserState.Manager.Email</MudText>
+                    <MudText>Ngày tháng năm sinh: @UserState.Manager.DateOfBirth.ToShortDateString()</MudText>
+                </MudStack>
+            }
+        </MudPaper>
+        <MudPaper Class="pa-5 rounded overflow-y-scroll" Height="500px"Elevation="3">
+            <MudStack Class="pa-1">
+                <MudText Typo="Typo.h6" Class="ma-auto">Thông báo</MudText>
+                @if (_notifications.Count == 0)
+                {
+                    <MudText Class="ma-auto">Đang tải...</MudText>
+                }
+                @foreach (var notification in this._notifications)
+                {
+                    <MudText Typo="Typo.h6" Class="ma-auto">@notification.Title</MudText>
+                    <MudText>@notification.Content</MudText>
+                    <MudText>@notification.CreatedAt.ToLocalTime()</MudText>
+                    <MudDivider DividerType="DividerType.Middle"></MudDivider>
+                }
+            </MudStack>
+        </MudPaper>
+    </MudStack>
 </MudPaper>
 
 @code
 {
-    protected override void OnInitialized()
+    private List<NotificationDto> _notifications = new List<NotificationDto>();
+
+    protected override async void OnInitialized()
     {
         this.UserState.OnChange += StateHasChanged;
+        if (UserState.UserId.Length > 0)
+        {
+            await this.GetNotifications();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (UserState.UserId.Length > 0 && this._notifications.Count == 0)
+        {
+            await this.GetNotifications();
+        }
     }
 
     public void Dispose()
     {
         this.UserState.OnChange -= StateHasChanged;
+    }
+
+    private async Task GetNotifications()
+    {
+        try
+        {
+            Console.WriteLine("UserId=", UserState.UserId);
+            this._notifications = await HttpClient.GetFromJsonAsync<List<NotificationDto>>(
+                $"api/Notification/{UserState.UserId}") ?? new List<NotificationDto>();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }

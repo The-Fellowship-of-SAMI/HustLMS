@@ -39,7 +39,7 @@ public class AccountController : ControllerBase
             Email = user.Email,
             Role = user.Role,
             Token = _tokenService.CreateToken(user),
-            UserId = user.UserId
+            UserId = user.Id
         };
 
     }

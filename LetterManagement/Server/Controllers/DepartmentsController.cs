@@ -1,6 +1,5 @@
 ﻿using LetterManagement.Server.Services;
 using LetterManagement.Shared.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetterManagement.Server.Controllers

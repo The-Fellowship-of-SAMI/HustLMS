@@ -14,7 +14,7 @@ public class TokenService
         {
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Role, user.Role.ToString())
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this-is-a-secret-key"));

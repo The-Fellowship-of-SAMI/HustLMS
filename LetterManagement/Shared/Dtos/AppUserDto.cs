@@ -10,5 +10,5 @@ public class AppUserDto
 
     public Roles Role { get; set; }
 
-    public Guid UserId { get; set; }
+    public string UserId { get; set; }
 }
