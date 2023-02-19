@@ -99,14 +99,42 @@ namespace LetterManagement.Server
                         UserId = studentId1,
                         Role = Roles.Student,
                         Email = students[0].Email,
-                        UserName = students[0].Email
+                        UserName = students[0].Email,
+                        Notifications = new List<Notification>()
+                        {
+                            new Notification()
+                            {
+                                Title = "Đơn xin abc",
+                                Content = "Cập nhật thông báo cho sinh viên",
+                            },
+                            new Notification()
+                            {
+                                Title = "Đơn xin abc",
+                                Content = "Đã hoàn thành, em lên trường lấy đơn",
+                            }
+
+                        }
+                        
                     },
                     new ApplicationUser()
                     {
                         UserId = managerId1,
                         Role = Roles.Manager,
                         Email = managers[1].Email,
-                        UserName = managers[1].Email
+                        UserName = managers[1].Email,
+                        Notifications = new List<Notification>()
+                        {
+                            new Notification()
+                            {
+                                Title = "Đơn xin abc",
+                                Content = "Sinh viên gửi lại đơn",
+                            },
+                            new Notification()
+                            {
+                                Title = "Đơn xin abc",
+                                Content = "Sinh viên gửi đơn",
+                            }
+                        }
                     }
                 };
                 foreach (var user in appUsers)
@@ -323,7 +351,6 @@ namespace LetterManagement.Server
                         LetterAdditionalFields = null
                     }
                 };
-
                 departments[0].LetterTemplates.Add(letterTemplates[0]);
                 departments[2].LetterTemplates.Add(letterTemplates[0]);
                 await context.Students.AddRangeAsync(students);

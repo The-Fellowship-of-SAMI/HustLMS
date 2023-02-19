@@ -16,15 +16,17 @@ namespace LetterManagement.Server.Repositories
 
         public DbSet<Department> Departments { get; set; }  
 
+        public DbSet<Notification> Notifications { get; set; }
 
         public string DbPath { get; }
 
-        public DataContext(DbContextOptions options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             //var folder = Environment.SpecialFolder.LocalApplicationData;
             //var path = Environment.GetFolderPath(folder);
             //DbPath = System.IO.Path.Join(path, "sqlite_data1.db");
         }
+
 
         // The following configures EF to create a Sqlite database file in the
         // special "local" folder for your platform.
