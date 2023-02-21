@@ -9,92 +9,106 @@
 @if (Template is not null)
 {
     <MudPaper Width="70%" Class="mx-auto">
-    <MudCard Class="mx-auto pa-6 rounded" Elevation="3">
-        <MudCardHeader>
-            <MudText Class="gap-4 ma-auto" Typo="Typo.h4" Align="Align.Center">@Template.Name</MudText>
-        </MudCardHeader>
-        
-        <MudCardContent>
-            <MudText Typo="Typo.h6" Class="gap-3 pb-4">Kính gửi: @Template.Receiver</MudText>
+        <MudCard Class="mx-auto pa-6 rounded" Elevation="3">
+            <MudCardHeader>
+                <MudText Class="gap-4 ma-auto" Typo="Typo.h4" Align="Align.Center">@Template.Name</MudText>
+            </MudCardHeader>
 
-            @if (UserState.Student is not null)
-            {
-                <MudGrid Class="pl-20 pr-20" Spacing="1">
-                    <MudItem xs="6" sm="2"><MudText>Tên sinh viên:</MudText></MudItem>
-                    <MudItem xs="6" sm="4"><MudText>@UserState.Student.Name</MudText></MudItem>
-                    <MudItem xs="6" sm="2"><MudText>Mã số sinh viên:</MudText></MudItem>
-                    <MudItem xs="6" sm="4"><MudText>@UserState.Student.StudentId</MudText></MudItem>
-                    <MudItem xs="6" sm="2"><MudText>Khóa:</MudText></MudItem>
-                    <MudItem xs="6" sm="4"><MudText>@UserState.Student.SchoolYear</MudText></MudItem>
-                    <MudItem xs="6" sm="2"><MudText>Viện quản lý:</MudText></MudItem>
-                    <MudItem xs="6" sm="4"><MudText>@UserState.Student.School.Name</MudText></MudItem>
-                </MudGrid>
-            }
-            else
-            {
-                <MudAlert>Tài khoản của sinh viên chưa tồn tại trong hệ thống!</MudAlert>
-            }
-            <MudForm Class="pa-2">
-                @foreach (var additionalField in Template.AdditionalFields)
-                {
-                    if (additionalField.FieldType == FieldTypes.Checkbox)
+            <MudCardContent>
+                <MudForm Class="pa-2" @bind-IsValid="_isFormValid">
+                    <MudText Typo="Typo.h6" Class="gap-3 pb-4">Kính gửi: @Template.Receiver</MudText>
+                    @* <MudForm @bind-IsValid="_isFormValid"> *@
+                    @*     <MudSelect Class="pa-3" T="string" Label="Chọn nơi nhận" Required="true" RequiredError="Phải chọn nơi nhận" MultiSelection="true" @bind-Values="_selectedDepartments"> *@
+                    @* *@
+                    @*         @foreach (var dep in Template.Departments) *@
+                    @*         { *@
+                    @*             <MudSelectItem T="string" Value="dep.Name" /> *@
+                    @*         } *@
+                    @*     </MudSelect> *@
+                    @* </MudForm> *@
+
+                    <DepartmentSelect Departments="Template.Departments" />
+                    @if (UserState.Student is not null)
                     {
-                        <MudText >@additionalField.FieldName</MudText>
-                        var childFields = Template.AdditionalFields.
-                            Where(x => x.GroupFieldId == additionalField.Id);
-                        foreach (var child in childFields)
+                        <MudGrid Class="pl-20 pr-20" Spacing="1">
+                            <MudItem xs="6" sm="2"><MudText>Tên sinh viên:</MudText></MudItem>
+                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.Name</MudText></MudItem>
+                            <MudItem xs="6" sm="2"><MudText>Mã số sinh viên:</MudText></MudItem>
+                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.StudentId</MudText></MudItem>
+                            <MudItem xs="6" sm="2"><MudText>Khóa:</MudText></MudItem>
+                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.SchoolYear</MudText></MudItem>
+                            <MudItem xs="6" sm="2"><MudText>Viện quản lý:</MudText></MudItem>
+                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.School.Name</MudText></MudItem>
+                        </MudGrid>
+                    }
+                    else
+                    {
+                        <MudAlert>Tài khoản của sinh viên chưa tồn tại trong hệ thống!</MudAlert>
+                    }
+
+                    @foreach (var additionalField in Template.AdditionalFields)
+                    {
+                        if (additionalField.FieldType == FieldTypes.Checkbox)
                         {
-                            var letterAdditionalFieldInGroup = findOrCreateAdditionalField(child.Id);
+                            <MudText>@additionalField.FieldName</MudText>
+                            var childFields = Template.AdditionalFields.
+                            Where(x => x.GroupFieldId == additionalField.Id);
+                            foreach (var child in childFields)
+                            {
+                                var letterAdditionalFieldInGroup = findOrCreateAdditionalField(child.Id);
+                                <MudStack Row="true">
+
+                                    <MudCheckBox T="bool" Class="ma-auto" Size="Size.Medium" Label="@child.FieldName"
+                                 @bind-Checked="letterAdditionalFieldInGroup.FieldValueBool">
+                                    </MudCheckBox>
+
+                                    @if (child.FieldType == FieldTypes.Text)
+                                    {
+                                        <MudTextField Class="pb-3" T="string" Margin="Margin.Dense"
+                                  @bind-Value="letterAdditionalFieldInGroup.FieldValueString" />
+                                    }
+                                    @if (child.FieldType == FieldTypes.Datetime)
+                                    {
+                                        <MudTextField Class="ma-auto" T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date"
+                                  bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime" />
+                                    }
+
+                                </MudStack>
+
+
+                            }
+                        }
+                        var letterAdditionalField = findOrCreateAdditionalField(additionalField.Id);
+                        if (additionalField is { FieldType: FieldTypes.Text, GroupFieldId: null })
+                        {
+                            <MudTextField T="string" Label="@additionalField.FieldName"
+                              @bind-Value="@letterAdditionalField.FieldValueString"
+                              Required="true"
+                              RequiredError="Phải điền"></MudTextField>
+                        }
+                        if (additionalField is { FieldType: FieldTypes.Datetime, GroupFieldId: null })
+                        {
                             <MudStack Row="true">
-                                
-                                <MudCheckBox T="bool" Class="ma-auto" Size="Size.Medium" Label="@child.FieldName"
-                                             @bind-Checked="letterAdditionalFieldInGroup.FieldValueBool">
-                                </MudCheckBox>
-
-                                @if (child.FieldType == FieldTypes.Text)
-                                {
-                                    <MudTextField Class="pb-3" T="string" Margin="Margin.Dense"
-                                                  @bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
-                                }
-                                @if (child.FieldType == FieldTypes.Datetime)
-                                {
-                                    <MudTextField Class="ma-auto" T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date"
-                                                  bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime"/>
-                                }
-
+                                <MudText Class="ma-auto">@additionalField.FieldName</MudText>
+                                <MudDatePicker Label="dd/MM/yyyy" HelperText="Click nút lịch để chọn ngày"
+                                   PickerVariant="PickerVariant.Dialog" Editable="true"
+                                   Mask="@(new DateMask("dd.MM.yyyy"))"
+                                   DateFormat="dd.MM.yyyy" Placeholder="@DateTime.Today.ToShortDateString()"
+                                   @bind-Date="letterAdditionalField.FieldValueDateTime"
+                                   Required="true" />
                             </MudStack>
-
-            
                         }
                     }
-                    var letterAdditionalField = findOrCreateAdditionalField(additionalField.Id);
-                    if (additionalField is { FieldType: FieldTypes.Text,GroupFieldId: null })
-                    {
-                        <MudTextField  T="string" Label="@additionalField.FieldName" 
-                                       @bind-Value="@letterAdditionalField.FieldValueString"  ></MudTextField>
-                    }
-                    if (additionalField is { FieldType: FieldTypes.Datetime,GroupFieldId: null })
-                    {
-                        <MudStack Row="true">
-                            <MudText Class="ma-auto">@additionalField.FieldName</MudText>
-                            <MudDatePicker Label="dd/MM/yyyy" HelperText="Click nút lịch để chọn ngày" 
-                                           PickerVariant="PickerVariant.Dialog" Editable="true" 
-                                           Mask="@(new DateMask("dd.MM.yyyy"))" 
-                                           DateFormat="dd.MM.yyyy" Placeholder="@DateTime.Today.ToShortDateString()" 
-                                           @bind-Date="letterAdditionalField.FieldValueDateTime"
-                            />
-                        </MudStack>
-                    }
-                }
-            </MudForm>
-            <MudText Typo="Typo.body1" Class="pt-8">Ghi chú: @Template.Description</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@_submitLetter">
-                Gửi đơn
-            </MudButton>
-        </MudCardActions>
-    </MudCard>
+                    <MudText Typo="Typo.body1" Class="pt-8">Ghi chú: @Template.Description</MudText>
+                </MudForm>
+
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@_submitLetter" Disabled="!_isFormValid">
+                    Gửi đơn
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
     </MudPaper>
 }
 
@@ -107,6 +121,8 @@
     public Letter? Letter { get; set; }
 
 
+    private bool _isFormValid = true;
+
     protected override void OnInitialized()
     {
         UserState.OnChange += StateHasChanged;
@@ -116,24 +132,24 @@
     {
         UserState.OnChange -= StateHasChanged;
     }
-    
-    
+
+
 
     private async Task _submitLetter()
     {
         try
         {
             var createLetterDto = new CreateLetterDto()
-            {
-                StudentId = this.Letter!.Student!.StudentId,
-                LetterTemplateId = Template!.Id.ToString(),
-                LetterAdditionalFields = this.Letter!.LetterAdditionalFields
-                    
-            };
+                {
+                    StudentId = this.Letter!.Student!.StudentId,
+                    LetterTemplateId = Template!.Id.ToString(),
+                    LetterAdditionalFields = this.Letter!.LetterAdditionalFields
+
+                };
             var result = await HttpClient.PostAsJsonAsync("/api/letters", createLetterDto);
-            
-            if(result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
-            
+
+            if (result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
+
         }
         catch (Exception e)
         {
@@ -163,9 +179,9 @@
             }
         }
         var newLetterAdditionalField = new LetterAdditionalField()
-        {
-            LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldId
-        };
+            {
+                LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldId
+            };
         this.Letter.LetterAdditionalFields.Add(newLetterAdditionalField);
         return newLetterAdditionalField;
     }
@@ -180,5 +196,5 @@
     //         field.FieldValueDateTime = newField.FieldValueDateTime;
     //     }
     // }
-    
+
 }

@@ -1,7 +1,13 @@
 ﻿@using LetterManagement.Shared.Models
-<MudSelect T="string" Label="Chọn đơn vị"
+<MudSelect
+    Class="pb-4"
+    T="string" Label="Chọn đơn vị"
            MultiSelection="true"
-           @bind-Value="SelectedDepartmentsString" OnClose="OnSelectedDepartmentsChange">
+           @bind-Value="SelectedDepartmentsString" 
+           OnClose="OnSelectedDepartmentsChange"
+           Required="true"
+           RequiredError="Cần chọn"
+           >
     @if (Departments?.Count > 0)
     {
         @foreach (var department in Departments)
