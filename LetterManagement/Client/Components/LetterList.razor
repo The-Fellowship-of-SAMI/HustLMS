@@ -25,12 +25,14 @@ else
                                 <MudText>Sinh viên:@letter.Student.Name. MSSV: @letter.Student.StudentId. Khóa: @letter.Student.SchoolYear</MudText>
                             }
                             <MudText>Đơn vị:</MudText>
-                            <MudStack AlignItems="AlignItems.Stretch">
-                                @foreach (var department in letter.Template.Departments)
+                            <MudStack >
+                                <MudList>
+                                @foreach (var department in letter.Departments)
                                 {
-                                    <MudText>@department.Name</MudText>
+                                    <MudListItem Text="@department.Name"></MudListItem>
                                 }
-                                @if(letter.Managers is not null)
+                                </MudList>
+                                @if (letter.Managers is not null)
                                 {
                                     @foreach (var manager in letter.Managers)
                                     {

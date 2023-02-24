@@ -12,5 +12,7 @@ public class CreateLetterDto
     
     public List<LetterAdditionalField> LetterAdditionalFields { get; set; } = new List<LetterAdditionalField>();
 
+    public List<Guid> DepartmentsId { get; set; } = new List<Guid>();
+
     public List<Confirmation> Confirmations { get; set; } = new List<Confirmation>();
 }

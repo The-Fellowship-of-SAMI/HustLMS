@@ -8,7 +8,7 @@
 
 @if (Letter is null)
 {
-    <MudAlert Severity="Severity.Error">Không tồn tại </MudAlert>
+    <MudAlert Severity="Severity.Error">Không tồn tại</MudAlert>
 }
 else
 {
@@ -16,7 +16,13 @@ else
         <MudText Class="gap-4 ma-auto pb-3" Typo="Typo.h4" Align="Align.Center">@Letter.Template?.Name</MudText>
         <MudDivider />
         <MudText Typo="Typo.h6" Class="gap-3">Kính gửi: @Letter.Template?.Receiver</MudText>
-
+        <MudText>Nơi nhận:</MudText>
+        <MudList Dense="false" Clickable="false">
+            @foreach (var department in Letter.Departments)
+            {
+                <MudListItem Text="@department.Name"/>
+            }
+        </MudList>
         @if (Letter.Student is not null)
         {
             <MudGrid Class="ma-auto pa-4" Spacing="1">

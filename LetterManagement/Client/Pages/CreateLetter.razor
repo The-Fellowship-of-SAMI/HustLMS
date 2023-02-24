@@ -7,11 +7,11 @@
 @inject NavigationManager NavigationManager;
 @inject UserState UserState;
 
-<LetterForm Template="@Template" Letter="_letter"></LetterForm>
+<LetterForm Template="@_template" Letter="Letter"></LetterForm>
 
-@if (Template != null)
+@if (_template != null)
 {
-    <PageTitle>Viết đơn @Template.Name</PageTitle>
+    <PageTitle>Viết đơn @_template.Name</PageTitle>
 }
 
 else
@@ -23,19 +23,19 @@ else
     [Parameter]
     public string? TemplateId { get; set; }
 
-    protected LetterTemplate? Template;
-    
-    private Letter? _letter { get; set; } 
+    private LetterTemplate? _template;
+
+    private Letter? Letter { get; set; } 
     
     protected override async void OnInitialized()
     {
         try
         {
-            this.Template = await HttpClient.GetFromJsonAsync<LetterTemplate>($"/api/LetterTemplates/{TemplateId}");
-            this._letter = new Letter()
+            this._template = await HttpClient.GetFromJsonAsync<LetterTemplate>($"/api/LetterTemplates/{TemplateId}");
+            this.Letter = new Letter()
             {
                 Student = UserState.Student,
-                Template = Template,
+                Template = _template,
             };
             StateHasChanged();
         }

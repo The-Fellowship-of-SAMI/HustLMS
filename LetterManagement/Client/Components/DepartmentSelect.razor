@@ -16,12 +16,10 @@
         }
         if (SelectedDepartmentsString.Length>0)
         {
-            var selectedNames = SelectedDepartmentsString.Split(",");
+            var selectedNames = SelectedDepartmentsString.Split(", ");
             SelectedDepartments = Departments.Where(x => selectedNames.Contains(x.Name)).ToList();
-
         }
     }
-
 </MudSelect>
 @code {
 
@@ -38,7 +36,6 @@
 
     private Task OnSelectedDepartmentsChange()
     {
-
         return SelectedDepartmentsChanged.InvokeAsync(SelectedDepartments);
     }
 }

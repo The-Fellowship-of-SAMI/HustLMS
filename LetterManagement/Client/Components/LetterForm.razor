@@ -17,17 +17,9 @@
             <MudCardContent>
                 <MudForm Class="pa-2" @bind-IsValid="_isFormValid">
                     <MudText Typo="Typo.h6" Class="gap-3 pb-4">Kính gửi: @Template.Receiver</MudText>
-                    @* <MudForm @bind-IsValid="_isFormValid"> *@
-                    @*     <MudSelect Class="pa-3" T="string" Label="Chọn nơi nhận" Required="true" RequiredError="Phải chọn nơi nhận" MultiSelection="true" @bind-Values="_selectedDepartments"> *@
-                    @* *@
-                    @*         @foreach (var dep in Template.Departments) *@
-                    @*         { *@
-                    @*             <MudSelectItem T="string" Value="dep.Name" /> *@
-                    @*         } *@
-                    @*     </MudSelect> *@
-                    @* </MudForm> *@
-
-                    <DepartmentSelect Departments="Template.Departments" />
+                    
+                    <DepartmentSelect @bind-SelectedDepartments="SelectedDepartments" Departments="Template.Departments"></DepartmentSelect>
+                    
                     @if (UserState.Student is not null)
                     {
                         <MudGrid Class="pl-20 pr-20" Spacing="1">
@@ -55,7 +47,7 @@
                             Where(x => x.GroupFieldId == additionalField.Id);
                             foreach (var child in childFields)
                             {
-                                var letterAdditionalFieldInGroup = findOrCreateAdditionalField(child.Id);
+                                var letterAdditionalFieldInGroup = FindOrCreateAdditionalField(child.Id);
                                 <MudStack Row="true">
 
                                     <MudCheckBox T="bool" Class="ma-auto" Size="Size.Medium" Label="@child.FieldName"
@@ -78,7 +70,7 @@
 
                             }
                         }
-                        var letterAdditionalField = findOrCreateAdditionalField(additionalField.Id);
+                        var letterAdditionalField = FindOrCreateAdditionalField(additionalField.Id);
                         if (additionalField is { FieldType: FieldTypes.Text, GroupFieldId: null })
                         {
                             <MudTextField T="string" Label="@additionalField.FieldName"
@@ -120,7 +112,8 @@
     [Parameter]
     public Letter? Letter { get; set; }
 
-
+    private List<Department> SelectedDepartments { get; set; } = new List<Department>();
+    
     private bool _isFormValid = true;
 
     protected override void OnInitialized()
@@ -143,11 +136,18 @@
                 {
                     StudentId = this.Letter!.Student!.StudentId,
                     LetterTemplateId = Template!.Id.ToString(),
-                    LetterAdditionalFields = this.Letter!.LetterAdditionalFields
-
+                    LetterAdditionalFields = this.Letter!.LetterAdditionalFields,
+                    DepartmentsId = SelectedDepartments.Select(x=>x.Id).ToList()
                 };
+
+            foreach (var department in SelectedDepartments)
+            {
+                Console.WriteLine(department.Name);
+
+            }
             var result = await HttpClient.PostAsJsonAsync("/api/letters", createLetterDto);
 
+            
             if (result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
 
         }
@@ -158,17 +158,8 @@
             // StateHasChanged();
         }
     }
-    private void TestOnChange()
-    {
-        Console.WriteLine("Clicked Gửi đơn");
-        Console.WriteLine(Letter.LetterAdditionalFields.Count);
-        Console.WriteLine(Letter.Student.StudentId);
-        foreach (var letterLetterAdditionalField in this.Letter.LetterAdditionalFields)
-        {
-            Console.WriteLine($@"Text: {letterLetterAdditionalField.FieldValueString}. Checkbox: {letterLetterAdditionalField.FieldValueBool}. Datetime {letterLetterAdditionalField.FieldValueDateTime}");
-        }
-    }
-    private LetterAdditionalField? findOrCreateAdditionalField(Guid letterTemplateAdditionalFieldId)
+
+    private LetterAdditionalField? FindOrCreateAdditionalField(Guid letterTemplateAdditionalFieldId)
     {
         if (Letter is null) return null;
         foreach (var additionalField in Letter.LetterAdditionalFields)
@@ -185,16 +176,4 @@
         this.Letter.LetterAdditionalFields.Add(newLetterAdditionalField);
         return newLetterAdditionalField;
     }
-    // public void updateAdditionalField(LetterAdditionalField newField)
-    // {
-    //     var fields = Letter?.LetterAdditionalFields.Where(x => x.LetterTemplateAdditionalFieldId == newField.LetterTemplateAdditionalFieldId).ToList();
-    //
-    //     foreach (var field in fields)
-    //     {
-    //         field.FieldValueBool = newField.FieldValueBool;
-    //         field.FieldValueString = newField.FieldValueString;
-    //         field.FieldValueDateTime = newField.FieldValueDateTime;
-    //     }
-    // }
-
 }

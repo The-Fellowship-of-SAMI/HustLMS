@@ -20,6 +20,8 @@
         try
         {
             this.Letters = await Http.GetFromJsonAsync<List<Letter>>($"api/Letters/manager/{UserState.Manager.Id}");
+            if (Letters != null) Letters.Sort((a, b) => -a.CreatedAt.CompareTo(b.CreatedAt));
+
             StateHasChanged();
         }
         catch (Exception e)

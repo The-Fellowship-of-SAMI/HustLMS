@@ -26,6 +26,8 @@ public class LetterService : ILetterService
             Include(x=>x.Template).
             ThenInclude(x=>x!.Departments).
             AsSplitQuery().
+            Include(x=>x.Departments).
+
             ToListAsync();
     }
 
@@ -48,16 +50,34 @@ public class LetterService : ILetterService
         }
         var template =
             await _context.LetterTemplates.SingleOrDefaultAsync(x => x.Id == new Guid(letterDto.LetterTemplateId));
-        var letter = new Letter()
+        await using var transactionLetterDepartment = await _context.Database.BeginTransactionAsync();
+        
+        var departments = await _context.Departments.Where(x => letterDto.DepartmentsId.Contains(x.Id)).ToListAsync();
+
+        try
         {
-            Template = template,
-            Student = student,
-            LetterAdditionalFields = letterDto.LetterAdditionalFields
-        };
-        Console.WriteLine(letterDto.LetterAdditionalFields[0]);
-        await this._context.Letters.AddAsync(letter);
-        var result = await _context.SaveChangesAsync() > 0;
-        return result ? letter : null;
+            var letter = new Letter()
+            {
+                Template = template,
+                Student = student,
+                LetterAdditionalFields = letterDto.LetterAdditionalFields,
+                Departments = departments
+            };
+            foreach (var department in departments)
+            {
+                department.Letters.Add(letter);
+            }
+            await _context.Letters.AddAsync(letter);
+            await _context.SaveChangesAsync();
+            await transactionLetterDepartment.CommitAsync();
+            return letter;
+        }
+        catch
+        {
+            // ignored
+        }
+
+        return new Letter();
     }
 
     public async Task<bool> UpdateLetterNoteDto(UpdateLetterNoteDto updateLetterNoteDto)
@@ -101,6 +121,8 @@ public class LetterService : ILetterService
             ThenInclude(x=>x!.Departments).
             Include(x => x.Managers).
             AsSplitQuery().
+            Include(x=>x.Departments).
+
             ToListAsync();
         return letters;
     }
@@ -117,6 +139,8 @@ public class LetterService : ILetterService
             Include(x=>x.Template).
             ThenInclude(x=>x!.Departments).
             AsSplitQuery().
+            Include(x=>x.Departments).
+
             ToListAsync();
         return letters;
     }
@@ -136,6 +160,8 @@ public class LetterService : ILetterService
             Include(x=>x.Template).
             ThenInclude(x=>x!.Departments).
             AsSplitQuery().
+            Include(x=>x.Departments).
+
             ToListAsync();
         return letters;    
     }
@@ -150,6 +176,7 @@ public class LetterService : ILetterService
             ThenInclude(x=>x!.Departments).
             Include(x=>x.Template!.AdditionalFields).
             AsSplitQuery().
+            Include(x=>x.Departments).
             SingleOrDefaultAsync(x => x.Id == letterId);
         if (letter is not null) return letter;
         return new Letter();
