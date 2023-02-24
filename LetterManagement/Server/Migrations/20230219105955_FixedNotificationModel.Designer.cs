@@ -3,6 +3,7 @@ using System;
 using LetterManagement.Server.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,27 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetterManagement.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230219105955_FixedNotificationModel")]
+    partial class FixedNotificationModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
-
-            modelBuilder.Entity("DepartmentLetter", b =>
-                {
-                    b.Property<Guid>("DepartmentsId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("LettersId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DepartmentsId", "LettersId");
-
-                    b.HasIndex("LettersId");
-
-                    b.ToTable("DepartmentLetter");
-                });
 
             modelBuilder.Entity("DepartmentLetterTemplate", b =>
                 {
@@ -97,6 +85,9 @@ namespace LetterManagement.Server.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -558,21 +549,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasIndex("LetterId");
 
                     b.HasDiscriminator().HasValue("Confirmation");
-                });
-
-            modelBuilder.Entity("DepartmentLetter", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
-                        .WithMany()
-                        .HasForeignKey("LettersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DepartmentLetterTemplate", b =>

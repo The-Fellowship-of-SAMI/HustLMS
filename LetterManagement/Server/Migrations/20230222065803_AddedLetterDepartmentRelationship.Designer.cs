@@ -3,6 +3,7 @@ using System;
 using LetterManagement.Server.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,27 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetterManagement.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230222065803_AddedLetterDepartmentRelationship")]
+    partial class AddedLetterDepartmentRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
-
-            modelBuilder.Entity("DepartmentLetter", b =>
-                {
-                    b.Property<Guid>("DepartmentsId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("LettersId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DepartmentsId", "LettersId");
-
-                    b.HasIndex("LettersId");
-
-                    b.ToTable("DepartmentLetter");
-                });
 
             modelBuilder.Entity("DepartmentLetterTemplate", b =>
                 {
@@ -206,6 +194,9 @@ namespace LetterManagement.Server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("FinishedDate")
                         .HasColumnType("TEXT");
 
@@ -225,6 +216,8 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("StudentId");
 
@@ -560,21 +553,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasDiscriminator().HasValue("Confirmation");
                 });
 
-            modelBuilder.Entity("DepartmentLetter", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
-                        .WithMany()
-                        .HasForeignKey("LettersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DepartmentLetterTemplate", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.Department", null)
@@ -606,6 +584,10 @@ namespace LetterManagement.Server.Migrations
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
                 {
+                    b.HasOne("LetterManagement.Shared.Models.Department", null)
+                        .WithMany("ReceivedLetters")
+                        .HasForeignKey("DepartmentId");
+
                     b.HasOne("LetterManagement.Shared.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId");
@@ -724,6 +706,11 @@ namespace LetterManagement.Server.Migrations
             modelBuilder.Entity("LetterManagement.Server.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Notifications");
+                });
+
+            modelBuilder.Entity("LetterManagement.Shared.Models.Department", b =>
+                {
+                    b.Navigation("ReceivedLetters");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>

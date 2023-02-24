@@ -3,6 +3,7 @@ using System;
 using LetterManagement.Server.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,44 +11,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetterManagement.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230210142432_IdentityAdded")]
+    partial class IdentityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
 
-            modelBuilder.Entity("DepartmentLetter", b =>
-                {
-                    b.Property<Guid>("DepartmentsId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("LettersId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DepartmentsId", "LettersId");
-
-                    b.HasIndex("LettersId");
-
-                    b.ToTable("DepartmentLetter");
-                });
-
-            modelBuilder.Entity("DepartmentLetterTemplate", b =>
-                {
-                    b.Property<Guid>("DepartmentsId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("LetterTemplatesId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DepartmentsId", "LetterTemplatesId");
-
-                    b.HasIndex("LetterTemplatesId");
-
-                    b.ToTable("DepartmentLetterTemplate");
-                });
-
-            modelBuilder.Entity("LetterManagement.Server.Models.ApplicationUser", b =>
+            modelBuilder.Entity("LetterManagement.Server.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -112,33 +85,6 @@ namespace LetterManagement.Server.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("LetterManagement.Server.Models.Notification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.ConfirmationTemplate", b =>
@@ -209,6 +155,9 @@ namespace LetterManagement.Server.Migrations
                     b.Property<DateTime?>("FinishedDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("ManagerId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("TEXT");
 
@@ -225,6 +174,8 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
 
                     b.HasIndex("StudentId");
 
@@ -270,6 +221,9 @@ namespace LetterManagement.Server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -286,6 +240,8 @@ namespace LetterManagement.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("LetterTemplates");
                 });
@@ -308,9 +264,6 @@ namespace LetterManagement.Server.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("LetterId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -322,8 +275,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("LetterId");
 
                     b.ToTable("Manager");
                 });
@@ -390,7 +341,7 @@ namespace LetterManagement.Server.Migrations
                     b.Property<string>("FieldName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FieldType")
+                    b.Property<int?>("FieldType")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("GroupFieldId")
@@ -560,43 +511,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasDiscriminator().HasValue("Confirmation");
                 });
 
-            modelBuilder.Entity("DepartmentLetter", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
-                        .WithMany()
-                        .HasForeignKey("LettersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartmentLetterTemplate", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LetterManagement.Shared.Models.LetterTemplate", null)
-                        .WithMany()
-                        .HasForeignKey("LetterTemplatesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetterManagement.Server.Models.Notification", b =>
-                {
-                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
-                        .WithMany("Notifications")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
             modelBuilder.Entity("LetterManagement.Shared.Models.ConfirmationTemplate", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.LetterTemplate", null)
@@ -606,6 +520,10 @@ namespace LetterManagement.Server.Migrations
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
                 {
+                    b.HasOne("LetterManagement.Shared.Models.Manager", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId");
+
                     b.HasOne("LetterManagement.Shared.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId");
@@ -613,6 +531,8 @@ namespace LetterManagement.Server.Migrations
                     b.HasOne("LetterManagement.Shared.Models.LetterTemplate", "Template")
                         .WithMany()
                         .HasForeignKey("TemplateId");
+
+                    b.Navigation("Manager");
 
                     b.Navigation("Student");
 
@@ -626,15 +546,20 @@ namespace LetterManagement.Server.Migrations
                         .HasForeignKey("LetterId");
                 });
 
-            modelBuilder.Entity("LetterManagement.Shared.Models.Manager", b =>
+            modelBuilder.Entity("LetterManagement.Shared.Models.LetterTemplate", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
-                        .WithMany("Managers")
-                        .HasForeignKey("LetterId");
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("LetterManagement.Shared.Models.Manager", b =>
+                {
+                    b.HasOne("LetterManagement.Shared.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
                 });
@@ -668,7 +593,7 @@ namespace LetterManagement.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
+                    b.HasOne("LetterManagement.Server.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -677,7 +602,7 @@ namespace LetterManagement.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
+                    b.HasOne("LetterManagement.Server.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -692,7 +617,7 @@ namespace LetterManagement.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
+                    b.HasOne("LetterManagement.Server.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -701,7 +626,7 @@ namespace LetterManagement.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("LetterManagement.Server.Models.ApplicationUser", null)
+                    b.HasOne("LetterManagement.Server.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -721,18 +646,11 @@ namespace LetterManagement.Server.Migrations
                     b.Navigation("DepartmentNeedToConfirm");
                 });
 
-            modelBuilder.Entity("LetterManagement.Server.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Notifications");
-                });
-
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
                 {
                     b.Navigation("Confirmations");
 
                     b.Navigation("LetterAdditionalFields");
-
-                    b.Navigation("Managers");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.LetterTemplate", b =>

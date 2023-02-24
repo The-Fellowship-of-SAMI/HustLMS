@@ -8,7 +8,8 @@ namespace LetterManagement.Shared.Models
         public LetterTemplate? Template { get; set; }
 
         public Student? Student { get; set; }
-
+        
+        public List<Department> Departments { get; set; } = new List<Department>();
         public List<Manager> Managers { get; set; } = new List<Manager>();
 
         public string? NoteToStudent { get; set; }
