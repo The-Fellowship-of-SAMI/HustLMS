@@ -15,13 +15,13 @@ namespace LetterManagement.Server
                 {
                     new()
                     {
-                        Id = new Guid(),
+                        Id = Guid.NewGuid(),
                         Name = "Phòng đào tạo tầng 1",
                         ShortName = "PDT"
                     },
                     new()
                     {
-                        Id = new Guid(),
+                        Id = Guid.NewGuid(),
                         Name = "Viện toán ứng dụng và tin học",
                         ShortName = "SAMI"
                     },
@@ -133,7 +133,7 @@ namespace LetterManagement.Server
                     new ApplicationUser()
                     {
                         Id = managerId1.ToString(),
-                        Role = Roles.Manager,
+                        Role = Roles.SuperManager,
                         Email = managers[1].Email,
                         UserName = managers[1].Email,
                         Notifications = new List<Notification>()
@@ -158,14 +158,14 @@ namespace LetterManagement.Server
 
                 var longTimeOffLetterGroupId = Guid.NewGuid();
                 var guidForToiNopDonXinNghiHocDaiHanTu = Guid.NewGuid();
-                var guidForXin_Di_Hoc_tu_tuc_ngan_han = Guid.NewGuid();
+                var guidForXinDiHocTuTucNganHan = Guid.NewGuid();
                 var letterTemplates = new List<LetterTemplate>
                 {
                     new()
                     {
                         Id = new Guid(),
                         Departments = departments.Where(x => x.ShortName == "PDT").ToList(),
-                        Name = "Đơn xin nghỉ học dài hạn",
+                        Name = "ĐƠN XIN NGHỈ HỌC DÀI HẠN",
                         Receiver = @"BAN GIÁM HIỆU ĐẠI HỌC BÁCH KHOA HÀ NỘI, PHÒNG ĐÀO TẠO ĐẠI HỌC",
                         Description =
                             "Sinh viên sẽ nhận Quyết định nghỉ học dài hạn tại Phòng Công tác chính trị & Công tác SV. Thời gian nhập học trở lại là trong vòng 4 tuần trước khi bắt đầu mỗi học kỳ để SV đủ thời gian đăng ký học tập.",
@@ -175,7 +175,7 @@ namespace LetterManagement.Server
                             {
                                 Id = guidForToiNopDonXinNghiHocDaiHanTu,
                                 FieldName =
-                                    "Tôi nộp đơn xin nghỉ học dài hạn từ (ghi ngày tháng năm bắt đầu nghỉ)",
+                                    "Tôi nộp đơn xin nghỉ học dài hạn từ",
                                 FieldType = FieldTypes.Datetime
                             },
 
@@ -188,7 +188,7 @@ namespace LetterManagement.Server
                             },
                             new()
                             {
-                                Id = guidForXin_Di_Hoc_tu_tuc_ngan_han,
+                                Id = guidForXinDiHocTuTucNganHan,
                                 FieldName =
                                     "Xin đi du học tự túc ngắn hạn (ghi rõ du học ở đâu, kèm theo bản copy Giấy mời du học/Giấy báo nhập trường)",
                                 FieldType = FieldTypes.Text,
@@ -211,7 +211,7 @@ namespace LetterManagement.Server
                             new()
                             {
                                 Id = new Guid(),
-                                FieldName = "Do sức khỏe không tốt (kèm hồ sơ bệnh án)",
+                                FieldName = "Do sức khỏe không tốt",
                                 FieldType = FieldTypes.Text,
                                 GroupFieldId = longTimeOffLetterGroupId
                             },
@@ -315,7 +315,8 @@ namespace LetterManagement.Server
                         NoteToStudent = null,
                         ReceivedDate = null,
                         FinishedDate = null,
-                        LetterAdditionalFields = null
+                        LetterAdditionalFields = null,
+                        Departments = departments.Where(x => x.ShortName == "PDT").ToList()
                     },
                     new()
                     {
@@ -324,6 +325,7 @@ namespace LetterManagement.Server
                         Id = default,
                         Template = letterTemplates[0],
                         Student = students.SingleOrDefault(x => x.StudentId == 20195859),
+                        Departments = departments.Where(x => x.ShortName == "PDT").ToList(),
                         Managers = new List<Manager>()
                         {
                             managers[1],
@@ -341,7 +343,7 @@ namespace LetterManagement.Server
                             },
                             new()
                             {
-                                LetterTemplateAdditionalFieldId = guidForXin_Di_Hoc_tu_tuc_ngan_han,
+                                LetterTemplateAdditionalFieldId = guidForXinDiHocTuTucNganHan,
                                 FieldValueString = "Xin đi học ở Mỹ",
                                 FieldValueBool = true
                             }
@@ -366,6 +368,10 @@ namespace LetterManagement.Server
                 };
                 departments[0].LetterTemplates.Add(letterTemplates[0]);
                 departments[2].LetterTemplates.Add(letterTemplates[0]);
+                departments[0].Letters.Add(letters[0]);
+                departments[0].Letters.Add(letters[0]);
+                departments[2].Letters.Add(letters[2]);
+                departments[2].Letters.Add(letters[2]);
                 await context.Students.AddRangeAsync(students);
                 await context.Departments.AddRangeAsync(departments);
                 await context.Manager.AddRangeAsync(managers);

@@ -153,7 +153,7 @@ public class LetterService : ILetterService
             return new List<Letter>();
         }
         var letters = await this._context.Letters.
-            Where(x => x.Template!.Departments.Contains(department)).
+            Where(x => x.Departments.Contains(department)).
             Include(x => x.LetterAdditionalFields).
             Include(x=>x.Student).
             ThenInclude(x=>x!.School).

@@ -1,0 +1,40 @@
+﻿@page "/AssignLetter"
+@using LetterManagement.Client.StateContainer
+@using LetterManagement.Shared.Models
+@using LetterManagement.Client.Components;
+
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject UserState UserState
+
+
+<LetterList Letters="Letters"></LetterList>
+
+
+@code {
+
+    private List<Letter> Letters { get; set; } = new List<Letter>();
+
+    protected override async void OnInitialized()
+    {
+        UserState.OnChange += StateHasChanged;
+        await this.GetLettersByDepartment();
+    }
+
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
+    }
+
+    private async Task GetLettersByDepartment()
+
+    {
+        var departmentId = this.UserState?.Manager?.Department?.Id;
+        if(departmentId is null) return;
+        this.Letters = await this.HttpClient.GetFromJsonAsync<List<Letter>>($"/api/Letters/department/{departmentId.ToString()}") ?? new List<Letter>();
+        Letters.Sort((a, b) => -a.CreatedAt.CompareTo(b.CreatedAt));
+
+        StateHasChanged();
+    }
+    
+}
