@@ -3,11 +3,11 @@
 @inject NavigationManager NavigationManager
 @if (Letters is null)
 {
-    <MudProgressLinear  Color="Color.Info" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Info" Indeterminate="true" />
 }
 else
 {
-    <MudPaper Class="pa-2 ma-auto rounded" Elevation="0" Width="50%">
+    <MudPaper Class="pa-2 ma-auto rounded" Elevation="0" Width="60%">
         <MudStack Class="ma-auto">
             @foreach (var letter in Letters)
             {
@@ -20,11 +20,11 @@ else
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
-                            @if(letter.Student is not null)
+                            @if (letter.Student is not null)
                             {
                                 <MudText>Sinh viên:@letter.Student.Name</MudText>
                                 <MudText>MSSV: @letter.Student.StudentId</MudText>
-                                <MudText>Khóa: @letter.Student.SchoolYear</MudText>                            
+                                <MudText>Khóa: @letter.Student.SchoolYear</MudText>
                             }
                             <MudText>Đơn vị:</MudText>
                             <MudStack Spacing="0">
@@ -53,9 +53,17 @@ else
                                 <MudText GutterBottom="true"> Hoàn thành: @letter.FinishedDate.Value.ToString("dd/MM/yyyy")</MudText>
                             }
                         </MudCardContent>
-                        <MudCardActions>
-                            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="()=>navigate(letter.Id)" >Xem chi tiết</MudButton>
+                        <MudCardActions Class="pb-3">
+                            <MudSelect T="Manager" ToStringFunc="@converter" ValueChanged="(manager)=>OnSelectManagerChange(manager, letter)"
+                           Label="Chọn người phụ trách">
+                                @foreach (var manager in Managers)
+                                {
+                                    <MudSelectItem Value="manager"></MudSelectItem>
+                                }
+                            </MudSelect>
                         </MudCardActions>
+
+
                     </MudCard>
                 }
             }
@@ -63,13 +71,35 @@ else
     </MudPaper>
 }
 @code {
-
+    [Parameter]
+    public Guid DepartmentId { get; set; }
+    [Parameter]
+    public List<Manager> Managers { get; set; } = new List<Manager>();
     [Parameter]
     public IEnumerable<Letter>? Letters { get; set; } = null;
+
+    public bool IsAssignTaskButtonClicked { get; set; }
 
     private void navigate(Guid letterId)
     {
         NavigationManager.NavigateTo($@"/LetterDetail/{letterId.ToString()}");
+    }
+    public void ToggleOpen()
+    {
+        IsAssignTaskButtonClicked = !IsAssignTaskButtonClicked;
+    }
+
+    Func<Manager, string> converter = p => p?.Name;
+
+    public void OnSelectManagerChange(Manager? manager, Letter letter)
+    {
+        Console.WriteLine("managerName=", manager.Name);
+        Console.WriteLine("letterId =", letter.Id);
+        if (manager is null)
+        {
+            letter.Managers.RemoveAll(x => x.Department!.Id == DepartmentId);
+        }
+        letter.Managers.Add(manager);
     }
 
 }

@@ -16,10 +16,24 @@ public class ManagerController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<Student>> GetByManagerId(string id)
+    public async Task<ActionResult<Manager>> GetByManagerId(string id)
     {
         var manager = await this._managerService.GetByManagerId(new Guid(id));
         if (manager is not null) return Ok(manager);
         return NotFound();
+    }
+
+    [HttpGet("department/{id}")]
+    public async Task<ActionResult<Manager>> GetManagersByDepartmentId(string id)
+    {
+        try
+        {
+            var managers = await this._managerService.GetManagersByDepartmentId(new Guid(id));
+            return Ok(managers);
+        }
+        catch
+        {
+            return NotFound();
+        }
     }
 }

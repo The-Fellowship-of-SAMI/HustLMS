@@ -7,18 +7,44 @@
 @inject HttpClient HttpClient
 @inject UserState UserState
 
-
-<LetterList Letters="Letters"></LetterList>
-
+<MudStack Spacing="5">
+    <MudPaper Elevation="25" Width="70%" Class="ma-auto">
+        <MudToolBar>
+            <MudSwitch @bind-Checked="AssignedChecked" Label="Đã phân công" Color="Color.Success"  />
+        </MudToolBar>
+    </MudPaper>
+    <AssignLetterList Letters="ShowingLetters" Managers="Managers" DepartmentId="_departmentId"></AssignLetterList>
+</MudStack>
 
 @code {
+    private bool _assignedChecked = true;
+    public bool AssignedChecked
+    {
+        get => _assignedChecked;
+        set
+        {
+            _assignedChecked = value;
+            UpdateShowingLetter();
+        }
+    }
 
     private List<Letter> Letters { get; set; } = new List<Letter>();
+    private List<Manager> Managers { get; set; } = new List<Manager>();
 
+    private List<Letter> ShowingLetters { get; set; } = new List<Letter>();
+    private Guid _departmentId = new Guid();
     protected override async void OnInitialized()
     {
         UserState.OnChange += StateHasChanged;
+        if (UserState.Manager is not null)
+        {
+            this._departmentId = UserState.Manager.Department!.Id;
+        }
+
         await this.GetLettersByDepartment();
+        await this.GetManagersByDepartment();
+
+
     }
 
     public void Dispose()
@@ -29,12 +55,32 @@
     private async Task GetLettersByDepartment()
 
     {
-        var departmentId = this.UserState?.Manager?.Department?.Id;
-        if(departmentId is null) return;
-        this.Letters = await this.HttpClient.GetFromJsonAsync<List<Letter>>($"/api/Letters/department/{departmentId.ToString()}") ?? new List<Letter>();
+        this.Letters = await this.HttpClient.GetFromJsonAsync<List<Letter>>($"/api/Letters/department/{_departmentId.ToString()}") ?? new List<Letter>();
         Letters.Sort((a, b) => -a.CreatedAt.CompareTo(b.CreatedAt));
 
         StateHasChanged();
     }
-    
+
+    private async Task GetManagersByDepartment()
+    {
+        var departmentId = this.UserState?.Manager?.Department?.Id;
+        if (departmentId is null) return;
+        this.Managers = await this.HttpClient.GetFromJsonAsync<List<Manager>>($"/api/manager/department/{_departmentId.ToString()}") ?? new List<Manager>();
+        StateHasChanged();
+
+    }
+
+    private void UpdateShowingLetter()
+    {
+
+        if (AssignedChecked)
+        {
+            this.ShowingLetters = Letters.Where(x => x.Managers.Count > 0).ToList();
+        }
+        else 
+        {
+            this.ShowingLetters = Letters.Where(x => x.Managers.Count == 0).ToList();
+        }
+        StateHasChanged();
+    }
 }
