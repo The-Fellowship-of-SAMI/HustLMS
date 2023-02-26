@@ -42,5 +42,12 @@ public class ManagerService : IManagerService
             return null;
         return manager;
     }
-    
+
+    public async Task<List<Manager>> GetManagersByDepartmentId(Guid departmentId)
+    {
+
+        var managers = await this._context.Manager.Where(x => x.Department!.Id == departmentId).Include(x => x.Department).ToListAsync();
+        
+        return managers;
+    }
 }
