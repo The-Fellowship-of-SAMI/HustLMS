@@ -11,7 +11,7 @@
 
 @if (_template != null)
 {
-    <PageTitle>Viết đơn @_template.Name</PageTitle>
+    <PageTitle>Viết đơn @_template.Name?.ToLower()</PageTitle>
 }
 
 else

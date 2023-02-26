@@ -17,20 +17,36 @@
             <MudCardContent>
                 <MudForm Class="pa-2" @bind-IsValid="_isFormValid">
                     <MudText Typo="Typo.h6" Class="gap-3 pb-4">Kính gửi: @Template.Receiver</MudText>
-                    
+
                     <DepartmentSelect @bind-SelectedDepartments="SelectedDepartments" Departments="Template.Departments"></DepartmentSelect>
-                    
+
                     @if (UserState.Student is not null)
                     {
                         <MudGrid Class="pl-20 pr-20" Spacing="1">
-                            <MudItem xs="6" sm="2"><MudText>Tên sinh viên:</MudText></MudItem>
-                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.Name</MudText></MudItem>
-                            <MudItem xs="6" sm="2"><MudText>Mã số sinh viên:</MudText></MudItem>
-                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.StudentId</MudText></MudItem>
-                            <MudItem xs="6" sm="2"><MudText>Khóa:</MudText></MudItem>
-                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.SchoolYear</MudText></MudItem>
-                            <MudItem xs="6" sm="2"><MudText>Viện quản lý:</MudText></MudItem>
-                            <MudItem xs="6" sm="4"><MudText>@UserState.Student.School.Name</MudText></MudItem>
+                            <MudItem xs="6" sm="2">
+                                <MudText>Tên sinh viên:</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="4">
+                                <MudText>@UserState.Student.Name</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="2">
+                                <MudText>Mã số sinh viên:</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="4">
+                                <MudText>@UserState.Student.StudentId</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="2">
+                                <MudText>Khóa:</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="4">
+                                <MudText>@UserState.Student.SchoolYear</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="2">
+                                <MudText>Viện quản lý:</MudText>
+                            </MudItem>
+                            <MudItem xs="6" sm="4">
+                                <MudText>@UserState.Student.School.Name</MudText>
+                            </MudItem>
                         </MudGrid>
                     }
                     else
@@ -44,50 +60,50 @@
                         {
                             <MudText>@additionalField.FieldName</MudText>
                             var childFields = Template.AdditionalFields.
-                            Where(x => x.GroupFieldId == additionalField.Id);
+                                Where(x => x.GroupFieldId == additionalField.Id);
                             foreach (var child in childFields)
                             {
                                 var letterAdditionalFieldInGroup = FindOrCreateAdditionalField(child.Id);
                                 <MudStack Row="true">
 
                                     <MudCheckBox T="bool" Class="ma-auto" Size="Size.Medium" Label="@child.FieldName"
-                                 @bind-Checked="letterAdditionalFieldInGroup.FieldValueBool">
+                                                 @bind-Checked="letterAdditionalFieldInGroup.FieldValueBool">
                                     </MudCheckBox>
 
                                     @if (child.FieldType == FieldTypes.Text)
                                     {
                                         <MudTextField Class="pb-3" T="string" Margin="Margin.Dense"
-                                  @bind-Value="letterAdditionalFieldInGroup.FieldValueString" />
+                                                      @bind-Value="letterAdditionalFieldInGroup.FieldValueString"/>
                                     }
                                     @if (child.FieldType == FieldTypes.Datetime)
                                     {
                                         <MudTextField Class="ma-auto" T="DateTime?" Format="yyyy-MM-dd" InputType="InputType.Date"
-                                  bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime" />
+                                                      bind-Value="letterAdditionalFieldInGroup.FieldValueDateTime"/>
                                     }
 
                                 </MudStack>
-
-
                             }
                         }
                         var letterAdditionalField = FindOrCreateAdditionalField(additionalField.Id);
                         if (additionalField is { FieldType: FieldTypes.Text, GroupFieldId: null })
                         {
                             <MudTextField T="string" Label="@additionalField.FieldName"
-                              @bind-Value="@letterAdditionalField.FieldValueString"
-                              Required="true"
-                              RequiredError="Phải điền"></MudTextField>
+                                          @bind-Value="@letterAdditionalField.FieldValueString"
+                                          Required="true"
+                                          RequiredError="Mục này không được để trống">
+                            </MudTextField>
                         }
                         if (additionalField is { FieldType: FieldTypes.Datetime, GroupFieldId: null })
                         {
                             <MudStack Row="true">
                                 <MudText Class="ma-auto">@additionalField.FieldName</MudText>
                                 <MudDatePicker Label="dd/MM/yyyy" HelperText="Click nút lịch để chọn ngày"
-                                   PickerVariant="PickerVariant.Dialog" Editable="true"
-                                   Mask="@(new DateMask("dd.MM.yyyy"))"
-                                   DateFormat="dd.MM.yyyy" Placeholder="@DateTime.Today.ToShortDateString()"
-                                   @bind-Date="letterAdditionalField.FieldValueDateTime"
-                                   Required="true" />
+                                               PickerVariant="PickerVariant.Dialog" Editable="true"
+                                               Mask="@(new DateMask("dd.MM.yyyy"))"
+                                               DateFormat="dd.MM.yyyy" Placeholder="@DateTime.Today.ToShortDateString()"
+                                               @bind-Date="letterAdditionalField.FieldValueDateTime"
+                                               Required="true"
+                                               RequiredError="Mục này không được để trống"/>
                             </MudStack>
                         }
                     }
@@ -106,6 +122,7 @@
 
 
 @code {
+
     [Parameter]
     public LetterTemplate? Template { get; set; }
 
@@ -113,7 +130,7 @@
     public Letter? Letter { get; set; }
 
     private List<Department> SelectedDepartments { get; set; } = new List<Department>();
-    
+
     private bool _isFormValid = true;
 
     protected override void OnInitialized()
@@ -127,35 +144,32 @@
     }
 
 
-
     private async Task _submitLetter()
     {
         try
         {
             var createLetterDto = new CreateLetterDto()
-                {
-                    StudentId = this.Letter!.Student!.StudentId,
-                    LetterTemplateId = Template!.Id.ToString(),
-                    LetterAdditionalFields = this.Letter!.LetterAdditionalFields,
-                    DepartmentsId = SelectedDepartments.Select(x=>x.Id).ToList()
-                };
+            {
+                StudentId = this.Letter!.Student!.StudentId,
+                LetterTemplateId = Template!.Id.ToString(),
+                LetterAdditionalFields = this.Letter!.LetterAdditionalFields,
+                DepartmentsId = SelectedDepartments.Select(x => x.Id).ToList()
+            };
 
             foreach (var department in SelectedDepartments)
             {
                 Console.WriteLine(department.Name);
-
             }
             var result = await HttpClient.PostAsJsonAsync("/api/letters", createLetterDto);
 
-            
-            if (result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
 
+            if (result.IsSuccessStatusCode) NavigationManager.NavigateTo("/studentLetterList");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            // await DialogService.ShowMessageBox("error", "Chưa thể gửi đơn do có lỗi hệ thống, thử lại sau");
-            // StateHasChanged();
+    // await DialogService.ShowMessageBox("error", "Chưa thể gửi đơn do có lỗi hệ thống, thử lại sau");
+    // StateHasChanged();
         }
     }
 
@@ -170,10 +184,11 @@
             }
         }
         var newLetterAdditionalField = new LetterAdditionalField()
-            {
-                LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldId
-            };
+        {
+            LetterTemplateAdditionalFieldId = letterTemplateAdditionalFieldId
+        };
         this.Letter.LetterAdditionalFields.Add(newLetterAdditionalField);
         return newLetterAdditionalField;
     }
+
 }

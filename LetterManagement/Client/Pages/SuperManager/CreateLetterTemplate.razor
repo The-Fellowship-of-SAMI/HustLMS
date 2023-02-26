@@ -14,7 +14,7 @@
 
             <MudStack Row="true" Class="ma-auto">
                 <MudText Class="gap-4 ma-auto" Typo="Typo.h5" Align="Align.Center">Tiêu đề:</MudText>
-                <MudTextField Class="pb-5" T="string" @bind-Value="_template.Name" Required="true" RequiredError="Cần điền" Label="Tiêu đề đơn"></MudTextField>
+                <MudTextField Class="pb-5" T="string" @bind-Value="_template.Name" Required="true" RequiredError="Mục này không được để trống" Label="Tiêu đề đơn"></MudTextField>
             </MudStack>
 
             <MudCardContent>
@@ -24,7 +24,7 @@
                 </MudStack>
                 <MudStack Row="true" Class="ma-auto">
                     <MudText Class="gap-4 ma-auto" Typo="Typo.h6" Align="Align.Center">Kính gửi:</MudText>
-                    <MudTextField Class="pb-4" T="string" @bind-Value="_template.Receiver" Required="true" RequiredError="Cần điền" Label="Đơn vị nhận"></MudTextField>
+                    <MudTextField Class="pb-4" T="string" @bind-Value="_template.Receiver" Required="true" RequiredError="Mục này không được để trống" Label="Đơn vị nhận"></MudTextField>
                 </MudStack>
 
                 <MudGrid Class="pl-20 pr-20" Spacing="1">
@@ -76,7 +76,7 @@
                                   Label=@label
                                   @bind-Value=@fieldListElement.TemplateField.FieldName
                                   Required="true"
-                                  RequiredError="Cần điền">
+                                  RequiredError="Mục này không được để trống">
                         </MudTextField>
                         <MudSelect T="FieldTypes" Label="Kiểu dữ liệu"
                                AnchorOrigin="Origin.BottomCenter"
@@ -87,7 +87,7 @@
                         </MudSelect>
                         @if (fieldListElement.TemplateField.FieldType == FieldTypes.Checkbox)
                         {
-                            <MudSelect T="string" Label="Chọn các field cùng nhóm"
+                            <MudSelect T="string" Label="Chọn các mục cùng nhóm"
                                MultiSelection="true"
                                @bind-Value="fieldListElement.FieldsInGroupSeparatedByComma">
                                 @foreach (var field in _fieldsList)

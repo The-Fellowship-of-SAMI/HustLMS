@@ -17,7 +17,7 @@ namespace LetterManagement.Server
                     {
                         Id = Guid.NewGuid(),
                         Name = "Phòng đào tạo tầng 1",
-                        ShortName = "PDT"
+                        ShortName = "PDT1"
                     },
                     new()
                     {
@@ -29,7 +29,7 @@ namespace LetterManagement.Server
                     {
                         Id = Guid.NewGuid(),
                         Name = "Phòng đào tạo tầng 2",
-                        ShortName = "PDT"
+                        ShortName = "PDT2"
                     }
                 };
                 var managerId1 = Guid.NewGuid();
@@ -48,11 +48,11 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = managerId1,
-                        Name = "Nguyễn Thị Phòng Đào Tạo",
+                        Name = "Nguyễn Thị B",
                         Description = "Phụ trách về vấn chuyển sinh kĩ sư - thạc sĩ, cử nhân - thạc sĩ.",
-                        DateOfBirth = new DateTime(1980, 8, 3),
+                        DateOfBirth = new DateTime(1980, 1, 1),
                         Email = "c.nguyenthipdt@hust.edu.vn",
-                        PhoneNumber = "00101010101",
+                        PhoneNumber = "0123456789",
                         Department = departments[0] // PDT
                     }
                 };
@@ -62,7 +62,7 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = studentId1,
-                        Name = "Phạm Anh Đức Test Singleton",
+                        Name = "Phạm Anh Đức",
                         PhoneNumber = "0123456",
                         StudentId = 20195859,
                         Email = "duc.pa195859@sis.hust.edu.vn",
@@ -105,27 +105,27 @@ namespace LetterManagement.Server
                         {
                             new Notification()
                             {
-                                Title = "Đơn xin abc1",
+                                Title = "Đơn xin nghỉ học",
                                 Content = "Cập nhật thông báo cho sinh viên",
                             },
                             new Notification()
                             {
-                                Title = "Đơn xin abc2",
+                                Title = "Đơn xin phúc tra điểm",
+                                Content = "Đã hoàn thành",
+                            },
+                            new Notification()
+                            {
+                                Title = "Đơn xin miễn học phần ngoại ngữ",
                                 Content = "Đã hoàn thành, em lên trường lấy đơn",
                             },
                             new Notification()
                             {
-                                Title = "Đơn xin abc3",
+                                Title = "Đơn xin hoãn thi cuối kỳ",
                                 Content = "Đã hoàn thành, em lên trường lấy đơn",
                             },
                             new Notification()
                             {
-                                Title = "Đơn xin abc4",
-                                Content = "Đã hoàn thành, em lên trường lấy đơn",
-                            },
-                            new Notification()
-                            {
-                                Title = "Đơn xin abc5",
+                                Title = "Đơn xin phúc tra điểm",
                                 Content = "Đã hoàn thành, em lên trường lấy đơn",
                             }
                         }
@@ -140,12 +140,12 @@ namespace LetterManagement.Server
                         {
                             new Notification()
                             {
-                                Title = "Đơn xin abc",
+                                Title = "Đơn xin nghỉ học dài hạn",
                                 Content = "Sinh viên gửi lại đơn",
                             },
                             new Notification()
                             {
-                                Title = "Đơn xin abc",
+                                Title = "Đơn xin rút học phần",
                                 Content = "Sinh viên gửi đơn",
                             }
                         }
@@ -164,7 +164,7 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = new Guid(),
-                        Departments = departments.Where(x => x.ShortName == "PDT").ToList(),
+                        Departments = departments.Where(x => x.ShortName == "PDT2").ToList(),
                         Name = "ĐƠN XIN NGHỈ HỌC DÀI HẠN",
                         Receiver = @"BAN GIÁM HIỆU ĐẠI HỌC BÁCH KHOA HÀ NỘI, PHÒNG ĐÀO TẠO ĐẠI HỌC",
                         Description =
@@ -240,7 +240,7 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = new Guid(),
-                        Departments = departments.Where(x => x.ShortName == "PDT").ToList(),
+                        Departments = departments.Where(x => x.ShortName == "PDT1").ToList(),
                         Name = "ĐƠN XIN TIẾP NHẬN TRỞ LẠI HỌC",
                         Receiver = @"HIỆU TRƯỞNG TRƯỜNG ĐHBK HÀ NỘI, TRƯỞNG PHÒNG ĐÀO TẠO ĐẠI HỌC",
                         AdditionalFields = new List<TemplateAdditionalField>

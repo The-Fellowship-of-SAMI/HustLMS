@@ -2,25 +2,25 @@
 <MudSelect
     Class="pb-4"
     T="string" Label="Chọn đơn vị"
-           MultiSelection="true"
-           @bind-Value="SelectedDepartmentsString" 
-           OnClose="OnSelectedDepartmentsChange"
-           Required="true"
-           RequiredError="Cần chọn"
-           >
+    MultiSelection="true"
+    @bind-Value="SelectedDepartmentsString"
+    OnClose="OnSelectedDepartmentsChange"
+    Required="true"
+    RequiredError="Mục này không được để trống">
     @if (Departments?.Count > 0)
     {
         @foreach (var department in Departments)
         {
             <MudSelectItem T="string" Value="department.Name"/>
         }
-        if (SelectedDepartmentsString.Length>0)
+        if (SelectedDepartmentsString.Length > 0)
         {
             var selectedNames = SelectedDepartmentsString.Split(", ");
             SelectedDepartments = Departments.Where(x => selectedNames.Contains(x.Name)).ToList();
         }
     }
 </MudSelect>
+
 @code {
 
     [Parameter]
@@ -38,4 +38,5 @@
     {
         return SelectedDepartmentsChanged.InvokeAsync(SelectedDepartments);
     }
+
 }
