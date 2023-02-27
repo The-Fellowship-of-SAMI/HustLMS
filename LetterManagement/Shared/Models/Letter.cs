@@ -17,10 +17,12 @@ namespace LetterManagement.Shared.Models
 
         public DateTime? FinishedDate { get; set; } = null;
 
+        public List<FinishedConfirmation> FinishedConfirmations { get; set; } = new List<FinishedConfirmation>();
+        
         public string State {
             get
             {
-                if (FinishedDate.HasValue)
+                if (Managers.Count == FinishedConfirmations.Count)
                 {
                     return "Hoàn thành";
                 }
@@ -55,5 +57,14 @@ namespace LetterManagement.Shared.Models
         public string? FieldValueString { get; set; }
         public bool FieldValueBool { get; set; } = false;
         public DateTime? FieldValueDateTime { get; set; }
+    }
+
+    public class FinishedConfirmation
+    {
+        public Guid Id { get; set; }
+        public Manager? Manager { get; set; } = null;
+
+        public string? DepartmentName { get; set; } = null;
+        public DateTime? FinishedDate { get; set; } = null;
     }
 }

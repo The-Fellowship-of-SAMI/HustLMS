@@ -2,9 +2,13 @@
 {
     public class LetterStateDto
     {
-        public Guid LetterId { get; set; }
+        public Guid? LetterId { get; set; }
         public DateTime? ReceivedDate { get; set; } 
 
-        public DateTime? FinishedDate { get; set; } 
+        public Guid? ManagerId { get; set; }
+
+        public string? DepartmentName { get; set; }
+        
+        
     }
 }

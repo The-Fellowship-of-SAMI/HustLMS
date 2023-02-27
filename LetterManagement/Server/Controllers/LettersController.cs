@@ -96,8 +96,14 @@ namespace LetterManagement.Server.Controllers
         public async Task<ActionResult> UpdateState([FromBody] LetterStateDto letterStateDto)
         {
             var updateResult = await this._letterService.UpdateLetterState(letterStateDto);
-            if (updateResult) return Ok(updateResult);
-            else return NotFound(updateResult);
+            return updateResult ? Ok(updateResult) : NotFound(updateResult);
+        }
+
+        [HttpPut("managers")]
+        public async Task<IActionResult> UpdateManagers([FromBody] UpdateLetterManagerDto updateLetterManagerDto)
+        {
+            var updateResult = await this._letterService.UpdateLetterManager(updateLetterManagerDto);
+            return updateResult ? Ok(updateResult) : NotFound(updateResult);
         }
     }
 }

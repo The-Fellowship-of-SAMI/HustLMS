@@ -3,6 +3,7 @@ using System;
 using LetterManagement.Server.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetterManagement.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230227035957_addedLetterManagerManyManyRelationship")]
+    partial class addedLetterManagerManyManyRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
@@ -195,33 +198,6 @@ namespace LetterManagement.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("LetterManagement.Shared.Models.FinishedConfirmation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DepartmentName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("FinishedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("LetterId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("ManagerId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasIndex("ManagerId");
-
-                    b.ToTable("FinishedConfirmation");
                 });
 
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
@@ -641,19 +617,6 @@ namespace LetterManagement.Server.Migrations
                         .HasForeignKey("LetterTemplateId");
                 });
 
-            modelBuilder.Entity("LetterManagement.Shared.Models.FinishedConfirmation", b =>
-                {
-                    b.HasOne("LetterManagement.Shared.Models.Letter", null)
-                        .WithMany("FinishedConfirmations")
-                        .HasForeignKey("LetterId");
-
-                    b.HasOne("LetterManagement.Shared.Models.Manager", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId");
-
-                    b.Navigation("Manager");
-                });
-
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
                 {
                     b.HasOne("LetterManagement.Shared.Models.Student", "Student")
@@ -790,8 +753,6 @@ namespace LetterManagement.Server.Migrations
             modelBuilder.Entity("LetterManagement.Shared.Models.Letter", b =>
                 {
                     b.Navigation("Confirmations");
-
-                    b.Navigation("FinishedConfirmations");
 
                     b.Navigation("LetterAdditionalFields");
                 });

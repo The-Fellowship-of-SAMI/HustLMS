@@ -75,7 +75,7 @@
 
         if (AssignedChecked)
         {
-            this.ShowingLetters = Letters.Where(x => x.Managers.Count > 0).ToList();
+            this.ShowingLetters = Letters.Where(x => x.Managers.Where(x=>x.Department.Id == _departmentId).ToList().Count > 0).ToList();
         }
         else 
         {

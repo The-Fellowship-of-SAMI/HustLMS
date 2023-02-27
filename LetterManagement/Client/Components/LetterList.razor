@@ -52,6 +52,7 @@ else
                             {
                                 <MudText GutterBottom="true"> Hoàn thành: @letter.FinishedDate.Value.ToString("dd/MM/yyyy")</MudText>
                             }
+                            <MudText> Đơn vị đã nhận: @string.Join(", ", letter.FinishedConfirmations.Select(x=>x.DepartmentName).ToList()) </MudText>
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="()=>navigate(letter.Id)" >Xem chi tiết</MudButton>

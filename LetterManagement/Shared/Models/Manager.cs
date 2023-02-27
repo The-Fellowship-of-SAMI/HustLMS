@@ -17,6 +17,8 @@ namespace LetterManagement.Shared.Models
 
         public Department? Department { get; set; }
 
+        public List<Letter> Letters { get; set; } = new List<Letter>();
+
         public override string ToString()
         {
             return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(DateOfBirth)}: {DateOfBirth}, {nameof(Email)}: {Email}, {nameof(PhoneNumber)}: {PhoneNumber}, {nameof(Department)}: {Department}";

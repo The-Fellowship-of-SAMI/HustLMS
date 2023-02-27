@@ -116,6 +116,7 @@ public class LetterService : ILetterService
         var letters = await this._context.Letters.
             Where(x => x.Student!.StudentId == studentId).
             Include(x => x.LetterAdditionalFields).
+            Include(x=>x.FinishedConfirmations).
             Include(x=>x.Managers).
             Include(x=>x.Template).
             ThenInclude(x=>x!.Departments).
@@ -134,6 +135,7 @@ public class LetterService : ILetterService
         var letters = await this._context.Letters.
             Where(x => x.Managers.Contains(manager)).
             Include(x => x.LetterAdditionalFields).
+            Include(x=>x.FinishedConfirmations).
             Include(x=>x.Student).
             ThenInclude(x=>x!.School).
             Include(x=>x.Template).
@@ -155,6 +157,7 @@ public class LetterService : ILetterService
         var letters = await this._context.Letters.
             Where(x => x.Departments.Contains(department)).
             Include(x => x.LetterAdditionalFields).
+            Include(x=>x.Managers).
             Include(x=>x.Student).
             ThenInclude(x=>x!.School).
             Include(x=>x.Template).
@@ -170,6 +173,8 @@ public class LetterService : ILetterService
     {
         var letter = await this._context.Letters.
             Include(x => x.LetterAdditionalFields).
+            Include(x=>x.FinishedConfirmations).
+            ThenInclude(x=>x.Manager).
             Include(x=>x.Student).
             ThenInclude(x=>x!.School).
             Include(x=>x.Template).
@@ -184,10 +189,41 @@ public class LetterService : ILetterService
 
     public async Task<bool> UpdateLetterState(LetterStateDto letterStateDto)
     {
-        var letter = await this._context.Letters.SingleOrDefaultAsync(x => x.Id == letterStateDto.LetterId);
+        var letter = await this._context.Letters.Include(x=>x.Managers).SingleOrDefaultAsync(x => x.Id == letterStateDto.LetterId);
         if (letter is null) return false;
         letter.ReceivedDate = letterStateDto.ReceivedDate;
-        letter.FinishedDate = letterStateDto.FinishedDate;
+        var existedConfirmation = letter.FinishedConfirmations.SingleOrDefault(x => x.Manager.Id == letterStateDto.ManagerId);
+        if (existedConfirmation is null)
+        {
+            letter.FinishedConfirmations.Add(new FinishedConfirmation()
+            {
+                FinishedDate = DateTime.Now,
+                Manager = letter.Managers.SingleOrDefault(x=>x.Id == letterStateDto.ManagerId),
+                DepartmentName = letterStateDto.DepartmentName
+            });
+        }
+        await this._context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> UpdateLetterManager(UpdateLetterManagerDto updateLetterManagerDto)
+    {
+        var letter = await this._context.Letters.Include(x=>x.Managers).SingleOrDefaultAsync(x => x.Id == updateLetterManagerDto.LetterId);
+        if (letter is null) return false;
+
+        if (updateLetterManagerDto.ManagerId is null) return false;
+        if (updateLetterManagerDto.ManagerId?.Count == 0) return false;
+        
+        var managers = await this._context.Manager.
+            Where(x => updateLetterManagerDto!.ManagerId!.Contains(x.Id)).ToListAsync();
+        // var checkManagerDepartmentList = managers.Select(x => x.Department!.Id);
+        // var isAllManagerFromTheSameDepartment = checkManagerDepartmentList.All(x => x == updateLetterManagerDto.DepartmentId);
+        // if (!isAllManagerFromTheSameDepartment) return false;
+
+        foreach (var manager in managers)
+        {
+            if (!letter.Managers.Contains(manager)) letter.Managers.Add(manager);
+        }
 
         await this._context.SaveChangesAsync();
         return true;

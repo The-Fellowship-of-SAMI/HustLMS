@@ -33,13 +33,14 @@ namespace LetterManagement.Server
                     }
                 };
                 var managerId1 = Guid.NewGuid();
+                var managerId2 = Guid.NewGuid();
                 var managers = new List<Manager>()
                 {
                     new()
                     {
-                        Id = default,
-                        Name = "Trần Thị A",
-                        Description = "Phụ trách về vấn đề bảng điểm",
+                        Id = managerId2,
+                        Name = "Sami Trần",
+                        Description = "Phụ trách về viện toán",
                         DateOfBirth = new DateTime(1976, 2, 3),
                         Email = "a.tranthi@hust.edu.vn",
                         PhoneNumber = "012345678",
@@ -48,7 +49,7 @@ namespace LetterManagement.Server
                     new()
                     {
                         Id = managerId1,
-                        Name = "Nguyễn Thị B",
+                        Name = "PDT Nguyễn",
                         Description = "Phụ trách về vấn chuyển sinh kĩ sư - thạc sĩ, cử nhân - thạc sĩ.",
                         DateOfBirth = new DateTime(1980, 1, 1),
                         Email = "c.nguyenthipdt@hust.edu.vn",
@@ -80,18 +81,7 @@ namespace LetterManagement.Server
                         DateOfBirth = new DateTime(2001, 1, 1),
                         School = departments.Single(x => x.ShortName == "SAMI"),
                         SchoolYear = "K64",
-                    },
-                    new()
-                    {
-                        Id = new Guid(),
-                        Name = "Hieu",
-                        PhoneNumber = "0120102",
-                        StudentId = 20190001,
-                        Email = "hieu.nc190001@sis.hust.edu.vn",
-                        DateOfBirth = new DateTime(2001, 5, 6),
-                        School = departments.Single(x => x.ShortName == "SAMI"),
-                        SchoolYear = "K64",
-                    },
+                    }
                 };
                 var appUsers = new List<ApplicationUser>()
                 {
@@ -146,6 +136,26 @@ namespace LetterManagement.Server
                             new Notification()
                             {
                                 Title = "Đơn xin rút học phần",
+                                Content = "Sinh viên gửi đơn",
+                            }
+                        }
+                    },
+                    new ApplicationUser()
+                    {
+                        Id = managerId2.ToString(),
+                        Role = Roles.SuperManager,
+                        Email = managers[0].Email,
+                        UserName = managers[0].Email,
+                        Notifications = new List<Notification>()
+                        {
+                            new Notification()
+                            {
+                                Title = "Đơn xin chứng nhận sinh viên",
+                                Content = "Sinh viên gửi lại đơn",
+                            },
+                            new Notification()
+                            {
+                                Title = "Đơn xin rời lịch thi TOEIC Nội bộ",
                                 Content = "Sinh viên gửi đơn",
                             }
                         }
@@ -306,7 +316,7 @@ namespace LetterManagement.Server
                         ModifiedAt = default,
                         Id = default,
                         Template = letterTemplates[0],
-                        Student = students.SingleOrDefault((x => x.StudentId == 20195902)),
+                        Student = students.SingleOrDefault((x => x.StudentId == 20195859)),
                         Managers = new List<Manager>()
                         {
                             managers[1],
@@ -372,6 +382,11 @@ namespace LetterManagement.Server
                 departments[0].Letters.Add(letters[0]);
                 departments[2].Letters.Add(letters[2]);
                 departments[2].Letters.Add(letters[2]);
+                
+                managers[0].Letters.Add(letters[0]);
+                managers[1].Letters.Add(letters[1]);
+                
+                
                 await context.Students.AddRangeAsync(students);
                 await context.Departments.AddRangeAsync(departments);
                 await context.Manager.AddRangeAsync(managers);

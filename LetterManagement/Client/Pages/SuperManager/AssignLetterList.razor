@@ -1,6 +1,8 @@
 ﻿@using LetterManagement.Shared.Models
 @using MudBlazor.Extensions
+@using LetterManagement.Shared.Dtos
 @inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 @if (Letters is null)
 {
     <MudProgressLinear Color="Color.Info" Indeterminate="true" />
@@ -91,7 +93,7 @@ else
 
     Func<Manager, string> converter = p => p?.Name;
 
-    public void OnSelectManagerChange(Manager? manager, Letter letter)
+    public async void OnSelectManagerChange(Manager? manager, Letter letter)
     {
         Console.WriteLine("managerName=", manager.Name);
         Console.WriteLine("letterId =", letter.Id);
@@ -100,6 +102,13 @@ else
             letter.Managers.RemoveAll(x => x.Department!.Id == DepartmentId);
         }
         letter.Managers.Add(manager);
+
+        await this.HttpClient.PutAsJsonAsync<UpdateLetterManagerDto>($"/api/Letters/managers", new UpdateLetterManagerDto()
+        {
+            DepartmentId = DepartmentId,
+            LetterId = letter.Id,
+            ManagerId = letter.Managers.Select(x => x.Id).ToList()
+        });
     }
 
 }

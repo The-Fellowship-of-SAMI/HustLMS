@@ -123,7 +123,7 @@ else
                            Variant="Variant.Filled"
                            Color="Color.Success"
                             OnClick="UpdateState"
-                           Disabled="this.Letter?.FinishedDate != null"
+                           Disabled="this.Letter.FinishedConfirmations.SingleOrDefault(x=>x.Manager.Id == UserState.Manager.Id) != null"
                         >
                            
                             Xác nhận hoàn thành
@@ -186,9 +186,16 @@ else
             {
                 LetterId = Letter.Id,
                 ReceivedDate = Letter.ReceivedDate,
-                FinishedDate = Letter.FinishedDate
+                ManagerId = UserState.Manager?.Id,
+                DepartmentName = UserState.Manager?.Department?.Name
 
             };
+        this.Letter.FinishedConfirmations.Add(new FinishedConfirmation()
+        {
+            FinishedDate = DateTime.Today,
+            Manager = UserState.Manager,
+            DepartmentName = UserState.Manager?.Department?.Name
+        });
 
         var result = await this.Http.PutAsJsonAsync("api/Letters/state", updateLetterStateDto);
         StateHasChanged();
