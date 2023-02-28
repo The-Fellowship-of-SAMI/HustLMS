@@ -11,12 +11,12 @@
         try
         {
             var user = await this.LocalStorage.GetItemAsync<UserState>("user");
+            Console.WriteLine(user);
             if ( user is null)
             {
                 NavigationManager.NavigateTo("/login");
             }
             await this.UserState.Set(user ?? new UserState());
-            Console.WriteLine($"<Initializer> Bearer token: {user!.Token}");
             HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {user?.Token}");
 
             StateHasChanged();

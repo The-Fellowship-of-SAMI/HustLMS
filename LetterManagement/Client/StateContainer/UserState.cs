@@ -19,7 +19,7 @@ namespace LetterManagement.Client.StateContainer
 
         public async Task Set(UserState userState)
         {
-            this.Token = Token;
+            this.Token = userState.Token;
             this.Manager = userState.Manager;
             this.Student = userState.Student;
             this.Role = userState.Role;
@@ -53,7 +53,7 @@ namespace LetterManagement.Client.StateContainer
         
         public override string ToString()
         {
-            return $"{nameof(Role)}: {Role}, {nameof(Student)}: {Student}, {nameof(Manager)}: {Manager}";
+            return $"{nameof(Role)}: {Role}, {nameof(Student)}: {Student}, {nameof(Manager)}: {Manager}, {nameof(Token)}: {Token}";
         }
         public event Action? OnChange;
 
