@@ -3,7 +3,7 @@
 @inject UserState UserState;
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage;
-
+@inject HttpClient HttpClient
 @code {
 
     protected override async void OnInitialized()
@@ -16,6 +16,9 @@
                 NavigationManager.NavigateTo("/login");
             }
             await this.UserState.Set(user ?? new UserState());
+            Console.WriteLine($"<Initializer> Bearer token: {user!.Token}");
+            HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {user?.Token}");
+
             StateHasChanged();
         }
         catch(Exception e)
